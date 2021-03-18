@@ -11,8 +11,10 @@ export default function GeneratedRule(props) {
 	const handleZoomInClick = () => setScale(scale + zoomStep);
 	const handleZoomOutClick = () => setScale(scale - zoomStep);
 
-	var cellSize = defaultCellSize * scale;
+  const emptyFunction = () => {};
 
+	var cellSize = defaultCellSize * scale;
+/*props.generatedRule.size * cellSize * 3*/
 	return (
   		<Container>
         <Row>
@@ -22,18 +24,22 @@ export default function GeneratedRule(props) {
           </ButtonGroup>    
         </Row>
   			<Row>
-  				<svg width={500} height={props.generatedRule.length * cellSize * 3} xmlns="http://www.w3.org/2000/svg">
+  				<svg width={500} height={500} xmlns="http://www.w3.org/2000/svg">
   					{ 
-              props.generatedRule.map((lm, ilm) =>
-  						  <LocalTransition
-    							key = {ilm}
-    							x = {0}
-    							y = {(ilm * 3) * cellSize}
-    							cellSize = {cellSize}
-    							localConfig = {lm.key}
-    							result = {lm.val}
-    							handleCellClick = {() => {}}
-    						/>
+              props.generatedRule.getTable().map((lm, ilm) => 
+  						  {
+                  return <LocalTransition
+                    key = {ilm}
+                    x = {0}
+                    y = {(ilm * 3) * cellSize}
+                    cellSize = {cellSize}
+                    localConfig = {lm[0]}
+                    result = {lm[1]}
+                    resultLineIndex = {1}
+                    resultColumnIndex = {1}
+                    handleCellClick = {emptyFunction}
+                  />
+                }
   				    )
             }
   				</svg>

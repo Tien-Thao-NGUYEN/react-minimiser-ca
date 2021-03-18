@@ -3,11 +3,21 @@ import React from 'react';
 
 import { renderCell } from './renderHelper'
 
-export default function Tuple(props) {
+const Tuple = React.memo(function Tuple(props) {
+ 
+  const handleCellClick = (indexColumn) => {
+    props.handleCellClick(props.indexLine, indexColumn)
+  }
 
 	return (
 		<g transform={"translate(0," + (props.indexLine * props.cellSize) + ")"}>
-			{props.tuple.map((column, indexColumn) => renderCell(0, indexColumn, column, props.cellSize, (indexColumn) => props.handleCellClick(props.indexLine, indexColumn)))}
+			{
+        props.tuple.map((valColumn, indexColumn) => 
+          renderCell(valColumn, 0, indexColumn, props.cellSize, handleCellClick)
+        )
+      }
 		</g>
 	);
-}
+});
+
+export default Tuple;

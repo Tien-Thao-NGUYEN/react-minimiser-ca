@@ -3,7 +3,7 @@ import React from 'react';
 import { getColor } from './renderHelper'
 
 //jouter text pour afficher état
-const Cell = React.memo(function Cell(props) {
+const Cell = React.memo((props) => {
 	return (
 			<rect 
 				x = {props.indexColumn * props.cellSize} 

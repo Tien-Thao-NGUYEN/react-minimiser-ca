@@ -17,8 +17,8 @@ export default function SuperRule(props) {
 		<Container>
 			<Row>
 				<ButtonGroup size="sm">
-					<Button onClick={handleZoomInClick}>+</Button>
-					<Button onClick={handleZoomOutClick}>-</Button>
+					<Button onClick={handleZoomInClick}>z+</Button>
+					<Button onClick={handleZoomOutClick}>z-</Button>
 				</ButtonGroup>
 			</Row>
 			<Row>
@@ -29,11 +29,13 @@ export default function SuperRule(props) {
 								lmlist.map((lm, ilm) =>
 									<LocalTransition
 										key = {ilm}
-										x = {(ilm * 4)  * cellSize}
-										y = {(ilmlist * 3) * cellSize}
+										x = {(ilm * 6.5)  * cellSize}
+										y = {(ilmlist * 2) * cellSize}
 										cellSize = {cellSize}
-										localConfig = {lm.key}
-										result = {lm.val}
+										localConfig = {lm[0]}
+										result = {lm[1]}
+                    resultLineIndex = {0}
+                    resultColumnIndex = {lm[0].length + 0.5}
 										handleCellClick = {props.handleCellClick}
 									/>
 								)
