@@ -1,70 +1,47 @@
 import React, { useState } from 'react';
-import { Container, Row, Col } from 'react-bootstrap'
+import { Container, Row, Col } from 'react-bootstrap';
 
-import SourceContainer from './elements/SourceContainer'
-import Diagram from './elements/Diagram'
-import GeneratedRule from './elements/GeneratedRule'
-import TransitionTable from './elements/simulator/TransitionTable'
-
+import SourceContainer from './components/SourceContainer';
+import TargetContainer from './components/TargetContainer';
+import TransitionTable from './simulator/TransitionTable';
 
 function App (props) {
-  const [generatedRule, setGeneratedRule] = useState(() => new TransitionTable());
-  const [configurationSize, setConfigurationSize] = useState(0);
+  const [genRule, setGenRule] = useState(() => new TransitionTable());
+  const [currentSize, setCurrentSize] = useState(0);
   const [currentTime, setCurrentTime] = useState(1);
   const [currentPosition, setCurrentPosition] = useState(-1);
-  
-  const handleCellClick = (indexLine, indexColumn) => {
-    console.log("click ", indexLine, indexColumn);
-  };
 
-  const addInRule = (newLocalConfig, newRes) => {
-    if (generatedRule.isDeterminismIfSet(newLocalConfig, newRes)) {
-      /*var generatedRuleCopy = generatedRule;*/
-      generatedRule.set(newLocalConfig, newRes);
-      /*generatedRuleCopy.set(newLocalConfig, newRes);*/
-      setGeneratedRule(generatedRule);
-    }
-    else {
-      console.log("not determinism if set ", newLocalConfig, " => ", newRes);
+  const updateGenRule = (flag, lc, res) => {
+    if (flag === true) {
+      var newGenRule = genRule;
+        newGenRule.set(lc, res);
+
+      setGenRule(newGenRule);
     }
   }
 
-  generatedRule.getTable();
 
   return (
-    <Container>
+    <Container style={{height: '100vh'}}>
       <Row>
-        
         <Col sm={6} lg={6} xl={6}>
-          <SourceContainer 
-            addInRule = {addInRule}
-            setConfigurationSize = {setConfigurationSize}
-            setCurrentTime = {setCurrentTime}
-            setCurrentPosition = {setCurrentPosition}
+          <SourceContainer
+            updateGenRule = { updateGenRule } 
+            setCurrentSize = { setCurrentSize }
+            setCurrentTime = { setCurrentTime }
+            setCurrentPosition = { setCurrentPosition }
           />
         </Col>
-
         <Col sm={6} lg={6} xl={6}>
-          <Container>
-            <Row>
-              <Col xl={4} style={{backgroundColor: 'yellow'}}>
-                <GeneratedRule
-                  generatedRule = {generatedRule}
-                />
-              </Col>
-              <Col xl={8} style={{backgroundColor: 'lightgray'}}>
-                 <Diagram
-                    transitionTable = {generatedRule}
-                    configurationSize = {configurationSize}
-                    currentTime = {currentTime}
-                    currentPosition = {currentPosition}
-                    handleCellClick = {handleCellClick}
-                  />
-              </Col>
-            </Row>
-          </Container>
+          <Col>
+            <TargetContainer 
+              genRule = { genRule }
+              currentSize = { currentSize }
+              currentTime = { currentTime }
+              currentPosition = { currentPosition } 
+            />
+          </Col>
         </Col>
-
       </Row>
     </Container>
   );

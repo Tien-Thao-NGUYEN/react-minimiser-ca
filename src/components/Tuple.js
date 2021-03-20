@@ -9,12 +9,12 @@ const Tuple = React.memo(function Tuple(props) {
     props.handleCellClick(props.indexLine, indexColumn)
   }
 
+  //translate phai thay doi de lay axe X
 	return (
-		<g transform={"translate(0," + (props.indexLine * props.cellSize) + ")"}>
+		<g transform={"translate(" + (props.x * props.cellSize) + "," + (props.indexLine * props.cellSize) + ")"}>
 			{
-        props.tuple.map((valColumn, indexColumn) => 
-          renderCell(valColumn, 0, indexColumn, props.cellSize, handleCellClick)
-        )
+        props.tuple.map( (valColumn, indexColumn) => 
+          renderCell(valColumn, 0, indexColumn, props.cellSize, handleCellClick) )
       }
 		</g>
 	);

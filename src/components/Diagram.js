@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Container, Row, ButtonGroup, Button } from 'react-bootstrap'
 
 import { defaultCellSize, zoomStep, renderTuple } from './renderHelper'
-import { getDiagram } from './simulator/simulator'
+import { getDiagram } from '../simulator/simulator'
 
 
 const getInitialGConfig = (size) => {
@@ -18,7 +18,7 @@ const getInitialGConfig = (size) => {
 
 function Diagram(props) {
 	const [scale, setScale] = useState(1);
-	/*const [diagram, setDiagram] = useState([getInitialGConfig(props.configurationSize)]);*/
+	const [diagram, setDiagram] = useState([getInitialGConfig(props.configurationSize)]);
   //can phai su dung diagram: khi tien len thi goi simulator, khi quay lai ma cung size thi chi xoa cell va gconfig
   //neu ko cung size thi phai goi simulator
 
@@ -27,9 +27,7 @@ function Diagram(props) {
 
 	const handleZoomInClick = () => setScale(scale + zoomStep);
 	const handleZoomOutClick = () => setScale(scale - zoomStep);
-
-
-  
+  const handleCellClick = (indexLine, indexColumn) => {console.log("click on ", indexLine, " ", indexColumn)};
 
   var cellSize = defaultCellSize * scale;
 
@@ -42,11 +40,11 @@ function Diagram(props) {
         </ButtonGroup>
       </Row>
 			<Row>
-				<svg width={props.configurationSize * cellSize} height={(props.currentTime + 1) * cellSize} xmlns="http://www.w3.org/2000/svg">
+				<svg width={props.currentSize * cellSize} height={(props.currentTime + 1) * cellSize} xmlns="http://www.w3.org/2000/svg">
 					{
-            getDiagram(props.transitionTable, getInitialGConfig(props.configurationSize), "6", 
+            getDiagram(props.transitionTable, getInitialGConfig(props.currentSize), "6", 
               1, 1, props.currentTime, props.currentPosition).map((valLine, indexLine) => 
-                renderTuple(valLine, indexLine, cellSize, props.handleCellClick))
+                renderTuple(valLine, 0, indexLine, cellSize, handleCellClick))
           }
 				</svg>
 			</Row>

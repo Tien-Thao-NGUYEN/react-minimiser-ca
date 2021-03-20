@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
-import { Container, Row, ButtonGroup, Button } from 'react-bootstrap'
+import { Container, Row, ButtonGroup, Button } from 'react-bootstrap';
 
 import LocalTransition from './LocalTransition';
-import { defaultCellSize, zoomStep } from './renderHelper';
+
+import { defaultCellSize, zoomStep, emptyFunction } from './renderHelper';
+import { initialLocalMapping } from '../data/dataHelper';
 
 
 export default function LocalMapping(props) {
   const [scale, setScale] = useState(1);
+  const [localMapping, setLocalMapping] = useState(initialLocalMapping);
 
   const handleZoomInClick = () => setScale(scale + zoomStep);
   const handleZoomOutClick = () => setScale(scale - zoomStep);
 
   var cellSize = defaultCellSize * scale;
-
-  /*console.log(Array.from(props.localMapping).map((lm, ilm) => lm));*/
   
   return (
       <Container>
@@ -26,18 +27,20 @@ export default function LocalMapping(props) {
         <Row>
           <svg width={500} height={props.localMapping.length * cellSize * 3} xmlns="http://www.w3.org/2000/svg">
             { 
-              props.localMapping.map((lm, ilm) => 
+              props.localMapping.map((elem, indElem) => 
                 {
                   return <LocalTransition
-                    key = {ilm}
+                    key = {indElem}
                     x = {0}
-                    y = {(ilm * 2) * cellSize}
+                    y = {(indElem * 2) * cellSize}
                     cellSize = {cellSize}
-                    localConfig = {lm[0]}
-                    result = {lm[1]}
+                    localConfig = {elem[0]}
+                    result = {elem[1]}
                     resultLineIndex = {0}
-                    resultColumnIndex = {lm[0].length + 0.5}
-                    handleCellClick = {() => {}}
+                    resultColumnIndex = {elem[0].length + 0.5}
+                    handleCellClick = {
+                      elem[2] ? ( () => props.handleChangeableCellClick(indElem) ) : ( emptyFunction )
+                    }
                   />
                 }
               )

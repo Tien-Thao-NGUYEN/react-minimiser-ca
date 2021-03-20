@@ -2334,41 +2334,4 @@ var MazoyerSolutionDataDt1 = {
   "specialState": "5"
 }
 
-function getIndexLinkedList() {
-  return MazoyerSolutionDataDt1["index_linker_list"]
-    .map(string => string.split(" ").map(e => parseInt(e))).map(arr => {
-      var lc = [arr[0],arr[1],arr[2]];
-      var res = arr[3];
-      return [lc, res];
-    });
-}
-
-function getSuperRule() {
-  var superRule = [];
-  var indexLinked = getIndexLinkedList();
-  var resLocList = MazoyerSolutionDataDt1["result_location_list"];
-  for (var   i = 0; i < indexLinked.length; i++) {
-    var obj = {
-                key: indexLinked[i][0],
-                val: indexLinked[i][1],
-                size: resLocList[i][0],
-                time: resLocList[i][1],
-                position: resLocList[i][2]
-              };
-
-    superRule.push(obj);
-  }
-
-  /*console.log(superRule);*/
-
-  return superRule;
-}
-
-function getLocalMapping() {
-  return [...MazoyerSolutionDataDt1["local_mapping"]["0"],
-          ...MazoyerSolutionDataDt1["local_mapping"]["1"]];
-}
-
-var initialSuperRule = getSuperRule();
-var initialLocalMapping = getLocalMapping();
-export { initialSuperRule, initialLocalMapping }
+export default MazoyerSolutionDataDt1;
