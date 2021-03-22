@@ -6,9 +6,9 @@ import LocalTransition from './LocalTransition'
 const defaultCellSize = 10;
 const zoomStep = 0.1;
 
-const renderCell = (valColumn, indexLine, indexColumn, cellSize, handleCellClick) => {
+const renderCell = (key, valColumn, indexLine, indexColumn, cellSize, handleCellClick) => {
 	return <Cell
-		    		key={ indexColumn }
+		    		key={ key }
 		    		indexLine={ indexLine }
 		    		indexColumn={ indexColumn }
 		    		cellState={ valColumn }
@@ -17,10 +17,9 @@ const renderCell = (valColumn, indexLine, indexColumn, cellSize, handleCellClick
           />
 };
 
-//ajouter indexColumn pour deplacer en axe X
-const renderTuple = (valTuple, x, indexTuple, cellSize, handleCellClick) => {
+const renderTuple = (key, valTuple, x, indexTuple, cellSize, handleCellClick) => {
 	return <Tuple
-			     	key = { indexTuple }
+			     	key = { key }
             x = { x }
 			     	indexLine = { indexTuple }
 			     	tuple = { valTuple }
@@ -29,20 +28,26 @@ const renderTuple = (valTuple, x, indexTuple, cellSize, handleCellClick) => {
           />
 };
 
-//them render LocalTransition vao day vi no dung o nhieu noi
-/*const renderLocalTransition = () => {
+const renderLocalTransition = (key, indexLocalTransition, localConfig, 
+    result, resultLineIndex, resultColumnIndex, lineStep, cellSize, handleCellClick) => {
   return <LocalTransition
-            key = {ilm}
+            key = { key }
             x = {0}
-            y = {(ilm * 3) * cellSize}
-            cellSize = {cellSize}
-            localConfig = {lm[0]}
-            result = {lm[1]}
-            resultLineIndex = {1}
-            resultColumnIndex = {1}
-            handleCellClick = {emptyFunction}
+            y = {(indexLocalTransition * lineStep) * cellSize}
+            cellSize = { cellSize }
+            localConfig = { localConfig }
+            result = { result }
+            resultLineIndex = { resultLineIndex }
+            resultColumnIndex = { resultColumnIndex }
+            handleCellClick = { handleCellClick }
           />
-}*/
+}
+
+const styleContainer = {
+                        'height': "85vh",
+                        'overflowX': "auto",
+                        'overflowY': "auto"
+                      };
 
 const emptyFunction = () => {};
 
@@ -59,4 +64,5 @@ const getColor = (state) => {
 	}	
 }
 
-export { defaultCellSize, zoomStep, renderCell, renderTuple, getColor, emptyFunction };
+export { defaultCellSize, zoomStep, renderCell, renderTuple, getColor, 
+          emptyFunction, renderLocalTransition, styleContainer };

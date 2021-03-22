@@ -14,7 +14,7 @@ const Tuple = React.memo(function Tuple(props) {
 		<g transform={"translate(" + (props.x * props.cellSize) + "," + (props.indexLine * props.cellSize) + ")"}>
 			{
         props.tuple.map( (valColumn, indexColumn) => 
-          renderCell(valColumn, 0, indexColumn, props.cellSize, handleCellClick) )
+          renderCell(indexColumn, valColumn, 0, indexColumn, props.cellSize, handleCellClick) )
       }
 		</g>
 	);

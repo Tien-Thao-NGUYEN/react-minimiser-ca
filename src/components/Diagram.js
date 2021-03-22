@@ -1,55 +1,86 @@
 import React, { useState } from 'react';
-import { Container, Row, ButtonGroup, Button } from 'react-bootstrap'
+import { Container, Row, Col, ButtonGroup, Button } from 'react-bootstrap';
 
-import { defaultCellSize, zoomStep, renderTuple } from './renderHelper'
-import { getDiagram } from '../simulator/simulator'
+import { defaultCellSize, zoomStep, renderTuple, styleContainer } from './renderHelper';
+import { getDiagram } from '../simulator/simulator';
+import { getInitialGConfig, outSpaceState } from '../data/dataHelper';
 
-
-const getInitialGConfig = (size) => {
-  if (size === 0)
-    return [];
-
-  var gc0 = ["1"];
-  for (var i = 1; i < size; i++)
-    gc0.push("0");
-
-  return gc0;
+function removeInDiagram(diagram, newTime, newPosition) {
+  var newDiagramRef = diagram.slice(0, newTime);
+  var newGConfigRef = diagram[newTime].slice(0, newPosition + 1);
+  newDiagramRef.push(newGConfigRef);
+  return newDiagramRef;
 }
 
-function Diagram(props) {
-	const [scale, setScale] = useState(1);
-	const [diagram, setDiagram] = useState([getInitialGConfig(props.configurationSize)]);
-  //can phai su dung diagram: khi tien len thi goi simulator, khi quay lai ma cung size thi chi xoa cell va gconfig
-  //neu ko cung size thi phai goi simulator
 
-  //can phai lam lai cai ghi vao JSON
+const Diagram = React.memo(
+  function Diagram(props) {
+  	const [scale, setScale] = useState(1);
+  	const [diagram, setDiagram] = useState([getInitialGConfig(props.currentSize)]);
 
+    /*console.log(props.currentSize, diagram[0].length);
+    console.log(props.currentTime, diagram.length - 1);
+    console.log(props.currentPosition, diagram[diagram.length - 1].length - 1);
+    console.log(diagram);*/
 
-	const handleZoomInClick = () => setScale(scale + zoomStep);
-	const handleZoomOutClick = () => setScale(scale - zoomStep);
-  const handleCellClick = (indexLine, indexColumn) => {console.log("click on ", indexLine, " ", indexColumn)};
+    if (props.currentSize === diagram[0].length) { //same size
+      var currentTimeDiagram = diagram.length - 1;
+      if (props.currentTime === currentTimeDiagram) { //same time
+        if (props.currentPosition > diagram[currentTimeDiagram].length - 1) { //add cell
+          //call simulator
+          var newDiagram = getDiagram(props.transitionTable, getInitialGConfig(props.currentSize), 
+                                        outSpaceState, 1, 1, props.currentTime, props.currentPosition);
+          setDiagram(newDiagram);
+        }
+        else if (props.currentPosition < diagram[currentTimeDiagram].length - 1) { //remove cell
+          setDiagram(removeInDiagram(diagram, props.currentTime, props.currentPosition));
+        } 
+      }
+      else { //diff time
+        if (props.currentTime > currentTimeDiagram) { //add cell
+          //call simulator 
+          newDiagram = getDiagram(props.transitionTable, getInitialGConfig(props.currentSize), 
+                                        outSpaceState, 1, 1, props.currentTime, props.currentPosition);
+          setDiagram(newDiagram);
+        }
+        else { //remove cell
+          setDiagram(removeInDiagram(diagram, props.currentTime, props.currentPosition));
+        }
+      }
+    }
+    else { //new diagram
+      newDiagram = getDiagram(props.transitionTable, getInitialGConfig(props.currentSize), 
+                                    outSpaceState, 1, 1, props.currentTime, props.currentPosition);
+      setDiagram(newDiagram);
+    }
 
-  var cellSize = defaultCellSize * scale;
+  	const handleZoomInClick = () => setScale(scale + zoomStep);
+  	const handleZoomOutClick = () => setScale(scale - zoomStep);
+    const handleCellClick = (indexLine, indexColumn) => {console.log("click on ", indexLine, " ", indexColumn)};
 
-	return (
-		<Container>
-      <Row>
-        <ButtonGroup size="sm">
-          <Button onClick={handleZoomInClick}>z+</Button>
-          <Button onClick={handleZoomOutClick}>z-</Button>
-        </ButtonGroup>
-      </Row>
-			<Row>
-				<svg width={props.currentSize * cellSize} height={(props.currentTime + 1) * cellSize} xmlns="http://www.w3.org/2000/svg">
-					{
-            getDiagram(props.transitionTable, getInitialGConfig(props.currentSize), "6", 
-              1, 1, props.currentTime, props.currentPosition).map((valLine, indexLine) => 
-                renderTuple(valLine, 0, indexLine, cellSize, handleCellClick))
-          }
-				</svg>
-			</Row>
-		</Container>
-	);
-}
+    var cellSize = defaultCellSize * scale;
+
+  	return (
+  		<Container>
+        <Row>
+          <ButtonGroup size="sm">
+            <Button onClick={handleZoomInClick}>z+</Button>
+            <Button onClick={handleZoomOutClick}>z-</Button>
+          </ButtonGroup>
+        </Row>
+  			<Row>
+          <Col style={ styleContainer } >
+    				<svg width={props.currentSize * cellSize} height={(props.currentTime + 1) * cellSize} xmlns="http://www.w3.org/2000/svg">
+    					{
+                diagram.map((valLine, indexLine) => 
+                    renderTuple(indexLine, valLine, 0, indexLine, cellSize, handleCellClick))
+              }
+    				</svg>
+          </Col>
+  			</Row>
+  		</Container>
+  	);
+  }
+);
 
 export default Diagram;

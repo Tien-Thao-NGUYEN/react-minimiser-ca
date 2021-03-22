@@ -66,4 +66,19 @@ function getNextState(state) {
   return stateArray[(stateArray.indexOf(state) + 1) % stateArray.length];
 }
 
-export { initialSuperRuleIndex, initialLocalMapping, initialSuperRule, initialRule, getNextState }
+function getInitialGConfig(size) {
+  if (size === 0)
+    return [];
+
+  var gc0 = ["1"];
+  for (var i = 1; i < size; i++)
+    gc0.push("0");
+
+  return gc0;
+}
+
+var outSpaceState = MazoyerSolutionDataDt1["outSpaceState"];
+
+//can phai lam lai cai ghi vao JSON
+export { outSpaceState, initialSuperRuleIndex, initialLocalMapping, initialSuperRule, 
+  initialRule, getNextState, getInitialGConfig }

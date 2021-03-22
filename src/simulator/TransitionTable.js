@@ -9,6 +9,7 @@ export default class TransitionTable extends Map {
   }
 
   has(localConfig) {
+    /*console.log("transition table ", localConfig);*/
     return super.has(localConfig.join(","));
   }
 
