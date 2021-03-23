@@ -37,10 +37,8 @@ const TargetContainer = React.memo(
             showDiagrame ?
               <Col xl={8} style={ {backgroundColor: 'lightgray'} }>
                  <Diagram
-                    targetRule = { props.targetRule }
-                    currentSize = { 0 }
-                    currentTime = { 0 }
-                    currentPosition = { -1 }
+                    rule = { props.targetRule }
+                    size = { 0 }
                   />
               </Col> : 
               <Col></Col>

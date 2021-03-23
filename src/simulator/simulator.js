@@ -1,27 +1,40 @@
-const getNextGConfig = (transitionTable, old_gc, outSpaceState, 
-                          numberCellLeft, numberCellRight, beginPosition, endPosition) => {
-  var old_gc_shallow = [...Array(numberCellLeft).fill(outSpaceState), 
-                        ...old_gc,
-                        ...Array(numberCellRight).fill(outSpaceState)];
-  var new_gc = [];
-  var sizeLConfig = numberCellLeft + 1 + numberCellRight;
-  for (var position = beginPosition; position <= endPosition; position++)
-  new_gc.push(transitionTable.get(old_gc_shallow.slice(position, position + sizeLConfig)));
+function oneStep(transitionTable, currentGConfig, outSpaceState, nCellLeft, nCellRight) {
+  const currentGConfigShallow = [ ...Array(nCellLeft).fill(outSpaceState), 
+                                ...currentGConfig,
+                                ...Array(nCellRight).fill(outSpaceState) ];
+  
+  const lConfigSize = nCellLeft + 1 + nCellRight;
+  const nextGConfig = [];
+  for (var position = 0; position < currentGConfig.length; position++) {
+    const nextState = transitionTable.get(currentGConfigShallow.slice(position, position + lConfigSize));
+    if (nextState === undefined)
+      return [false, nextGConfig];
 
-  return new_gc;
+    nextGConfig.push(nextState);
+  }
+
+  return [true, nextGConfig];
 }
 
-const getDiagram = (transitionTable, initialGConfig, outSpaceState, 
-                      numberCellLeft, numberCellRight, currentTime, currentPosition) => {
-  var diagram = [initialGConfig];
-  for (var time = 1; time < currentTime; time++)
-    diagram.push(getNextGConfig(transitionTable, diagram[time - 1], outSpaceState, 
-                    numberCellLeft, numberCellRight, 0, initialGConfig.length - 1));
+const simulate = (transitionTable, initialGConfig, outSpaceState, nCellLeft, nCellRight) => {
+  if (initialGConfig.length === 0)
+    return [];
 
-  diagram.push(getNextGConfig(transitionTable, diagram[currentTime - 1], outSpaceState, 
-                  numberCellLeft, numberCellRight, 0, currentPosition));
+  const diagram = [initialGConfig];
+  var isContinue = true;
+  var currentGConfig = initialGConfig;
+  do {
+    const [shouldContinue, nextGConfig] = 
+            oneStep(transitionTable, currentGConfig, outSpaceState, nCellLeft, nCellRight);
+    
+    if (nextGConfig.length !== 0)
+      diagram.push(nextGConfig);
+
+    currentGConfig = nextGConfig;
+    isContinue = shouldContinue;
+  } while (isContinue);
 
   return diagram;
 }
 
-export { getDiagram };
+export { simulate };

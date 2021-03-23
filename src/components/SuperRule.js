@@ -3,7 +3,7 @@ import { Container, Row, Col, ButtonGroup, Button } from 'react-bootstrap';
 
 import Tuple from './Tuple';
 
-import { defaultCellSize, zoomStep, renderTuple, emptyFunction, styleContainer } from './renderHelper'; 
+import { defaultCellSize, zoomStep, emptyFunction, styleContainer } from './renderHelper'; 
 import { initialSuperRule } from '../data/dataHelper';
 
 

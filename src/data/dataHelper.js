@@ -70,7 +70,7 @@ function getInitialGConfig(size) {
   if (size === 0)
     return [];
 
-  var gc0 = ["1"];
+  const gc0 = ["1"];
   for (var i = 1; i < size; i++)
     gc0.push("0");
 

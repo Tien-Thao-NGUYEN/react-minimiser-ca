@@ -29,10 +29,8 @@ export default function SourceContainer(props) {
           showDiagrame ?  
             <Col xl={8} style={{backgroundColor: 'gray'}}>
               <Diagram
-                 transitionTable = {initialRule}
-                 currentSize = {4}
-                 currentTime = {6}
-                 currentPosition = {3}
+                 rule = { initialRule }
+                 size = { 20 }
               />
             </Col> : 
             <Col></Col>
