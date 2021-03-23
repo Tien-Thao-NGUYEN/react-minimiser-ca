@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, ButtonGroup, Button } from 'react-bootstrap';
 
+import Tuple from './Tuple';
+
 import { defaultCellSize, zoomStep, renderTuple, emptyFunction, styleContainer } from './renderHelper'; 
 import { initialSuperRule } from '../data/dataHelper';
 
@@ -22,14 +24,47 @@ const SuperRule = React.memo(function SuperRule(props) {
 			</Row>
 			<Row>
 				<Col style={ styleContainer } >
-					<svg width={50} height={initialSuperRule.length * cellSize * 3} xmlns="http://www.w3.org/2000/svg">
+					<svg 
+            width = { 100 } 
+            height = { initialSuperRule.length * cellSize * 3 } 
+            xmlns="http://www.w3.org/2000/svg"
+          >
 						{
 							initialSuperRule.map( ([quint, tripl], indSrList) => 
                 quint.length === tripl.length ?
-                  [renderTuple(indSrList * 2, quint, 1, indSrList * 2, cellSize, emptyFunction)] :
-                  [renderTuple((indSrList - 1.5) * 3, quint, 0, (indSrList - 1.5) * 3, cellSize, emptyFunction),
-                    renderTuple((indSrList - 1.5) * 3 + 1, tripl, 1, (indSrList - 1.5) * 3 + 1, cellSize, emptyFunction)]
-                    
+                  [ <Tuple
+                      key = { indSrList * 2 }
+                      x = { 1 }
+                      indexLine = { indSrList * 2 }
+                      tuple = { quint }
+                      cellSize = { cellSize }
+                      fillOpacity = { 1 }
+                      stroke = { 'black' } 
+                      strokeWidth={ 1 }
+                      handleCellClick = { emptyFunction }
+                    /> ] :
+                  [ <Tuple
+                      key = { (indSrList - 1.5) * 3 }
+                      x = { 0 }
+                      indexLine = { (indSrList - 1.5) * 3 }
+                      tuple = { quint }
+                      cellSize = { cellSize }
+                      fillOpacity = { 1 }
+                      stroke = { 'black' } 
+                      strokeWidth={ 1 }
+                      handleCellClick = { emptyFunction }
+                    />,
+                    <Tuple
+                      key = { (indSrList - 1.5) * 3 + 1 }
+                      x = { 1 }
+                      indexLine = { (indSrList - 1.5) * 3 + 1 }
+                      tuple = { tripl }
+                      cellSize = { cellSize }
+                      fillOpacity = { 1 }
+                      stroke = { 'black' } 
+                      strokeWidth={ 1 }
+                      handleCellClick = { emptyFunction }
+                    /> ]
               )
 						}
 					</svg>

@@ -14,7 +14,7 @@ export default class TransitionTable extends Map {
   }
 
   delete(localConfig) {
-    return super.delete(localConfig.joi(","));
+    return super.delete(localConfig.join(","));
   }
 
   getTable() {

@@ -30,9 +30,9 @@ export default function SourceContainer(props) {
             <Col xl={8} style={{backgroundColor: 'gray'}}>
               <Diagram
                  transitionTable = {initialRule}
-                 currentSize = {props.currentSize}
-                 currentTime = {props.currentTime}
-                 currentPosition = {props.currentPosition}
+                 currentSize = {4}
+                 currentTime = {6}
+                 currentPosition = {3}
               />
             </Col> : 
             <Col></Col>
@@ -41,7 +41,7 @@ export default function SourceContainer(props) {
           showSuperRule ?
             <Col xl={4} style={ {backgroundColor: 'lightgray'} }>
               <SuperRule
-                currentIndex = { props.currentIndex }
+                indexSRErrorByGroup = { props.indexSRErrorByGroup }
               />
             </Col> : 
             <Col></Col>

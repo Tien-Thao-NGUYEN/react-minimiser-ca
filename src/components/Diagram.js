@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, ButtonGroup, Button } from 'react-bootstrap';
 
-import { defaultCellSize, zoomStep, renderTuple, styleContainer } from './renderHelper';
+import Tuple from './Tuple';
+
+import { defaultCellSize, zoomStep, styleContainer } from './renderHelper';
 import { getDiagram } from '../simulator/simulator';
 import { getInitialGConfig, outSpaceState } from '../data/dataHelper';
 
@@ -70,10 +72,25 @@ const Diagram = React.memo(
         </Row>
   			<Row>
           <Col style={ styleContainer } >
-    				<svg width={props.currentSize * cellSize} height={(props.currentTime + 1) * cellSize} xmlns="http://www.w3.org/2000/svg">
+    				<svg 
+              width = { props.currentSize * cellSize } 
+              height= { (props.currentTime + 1) * cellSize } 
+              xmlns="http://www.w3.org/2000/svg"
+            >
     					{
-                diagram.map((valLine, indexLine) => 
-                    renderTuple(indexLine, valLine, 0, indexLine, cellSize, handleCellClick))
+                diagram.map( (valLine, indexLine) => 
+                  <Tuple
+                    key = { indexLine }
+                    x = { 0 }
+                    indexLine = { indexLine }
+                    tuple = { valLine }
+                    cellSize = { cellSize }
+                    fillOpacity = { 1 }
+                    stroke = { 'black' } 
+                    strokeWidth={ 3 }
+                    handleCellClick = { handleCellClick }
+                  />
+                )
               }
     				</svg>
           </Col>

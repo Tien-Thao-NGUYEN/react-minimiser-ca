@@ -5,17 +5,31 @@ import { getColor } from './renderHelper'
 //jouter text pour afficher état
 const Cell = React.memo((props) => {
 	return (
+    <g 
+      transform = { "translate(" + (props.indexColumn * props.cellSize) 
+                    + "," + (props.indexLine * props.cellSize) + ")" }
+      onClick = { () => props.handleCellClick(props.indexColumn) }
+    >
 			<rect 
-				x = {props.indexColumn * props.cellSize} 
-				y = {props.indexLine * props.cellSize}
-				width = {props.cellSize} 
-				height={props.cellSize}
-				fill = {getColor(props.cellState)} 
-				fillOpacity = {1}
-				stroke = {'black'} 
-				strokeWidth={1}
-				onClick = {() => props.handleCellClick(props.indexColumn)}
+				x = { 0 } 
+				y = { 0 }
+				width = { props.cellSize }
+				height={ props.cellSize }
+        fill = { getColor(props.cellState) } 
+				fillOpacity = { props.fillOpacity }
+				stroke = { props.stroke } 
+				strokeWidth={ props.strokeWidth }
 			/>
+
+      <text 
+        x = { props.cellSize / 6 } 
+        y = { props.cellSize - (props.cellSize / 7)}
+        fontFamily = { "Verdana" }
+        fontSize = { props.cellSize }
+      >
+          {props.cellState}
+      </text>
+    </g>
 	);
 });
 

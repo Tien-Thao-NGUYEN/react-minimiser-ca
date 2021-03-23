@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { Container, Row, Col, ButtonGroup, Button } from 'react-bootstrap'
+import { Container, Row, Col, ButtonGroup, Button } from 'react-bootstrap';
 
-import { defaultCellSize, zoomStep, emptyFunction, renderLocalTransition, styleContainer } from './renderHelper';
+import LocalTransition from './LocalTransition';
+
+import { defaultCellSize, zoomStep, emptyFunction, styleContainer } from './renderHelper';
 
 //il faut que App passe une fct pour les erreurs de set dans map
 /*const GeneratedRule = React.memo(*/
@@ -23,11 +25,27 @@ import { defaultCellSize, zoomStep, emptyFunction, renderLocalTransition, styleC
           </Row>
     			<Row>
             <Col style={ styleContainer } >
-      				<svg width={50} height={props.genRule.size * cellSize * 3} xmlns="http://www.w3.org/2000/svg">
+      				<svg 
+                width = { 100 } 
+                height={ props.targetRule.size * cellSize * 3 } 
+                xmlns = "http://www.w3.org/2000/svg"
+              >
       					{ 
-                  props.genRule.getTable().map((elem, indElem) => 
-                    renderLocalTransition(indElem, indElem, elem[0], elem[1], 1, 1, 3, cellSize, 
-                      emptyFunction)
+                  props.targetRule.getTable().map( (elem, indElem) => 
+                    <LocalTransition
+                      key = { indElem }
+                      x = { 0 }
+                      y = { indElem * 3 * cellSize }
+                      localConfig = { elem[0] }
+                      result = { elem[1] }
+                      resultLineIndex = { 1 }
+                      resultColumnIndex = { 1 }
+                      cellSize = { cellSize }
+                      fillOpacity = { 1 }
+                      stroke = { 'black' } 
+                      strokeWidth={ 1 }
+                      handleCellClick = { emptyFunction }
+                    />
       				    )
                 }
       				</svg>

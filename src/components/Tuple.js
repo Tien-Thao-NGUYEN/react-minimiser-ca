@@ -1,7 +1,6 @@
-//Cette composant va remplacer LConfig et GConfig en fonction de nombre de cellules passé en props.
 import React from 'react';
 
-import { renderCell } from './renderHelper'
+import Cell from './Cell';
 
 const Tuple = React.memo(function Tuple(props) {
  
@@ -9,12 +8,24 @@ const Tuple = React.memo(function Tuple(props) {
     props.handleCellClick(props.indexLine, indexColumn)
   }
 
-  //translate phai thay doi de lay axe X
 	return (
-		<g transform={"translate(" + (props.x * props.cellSize) + "," + (props.indexLine * props.cellSize) + ")"}>
+		<g 
+      transform = { "translate(" + (props.x * props.cellSize) + "," + (props.indexLine * props.cellSize) + ")" }
+    >
 			{
         props.tuple.map( (valColumn, indexColumn) => 
-          renderCell(indexColumn, valColumn, 0, indexColumn, props.cellSize, handleCellClick) )
+          <Cell
+            key={ indexColumn }
+            indexLine={ 0 }
+            indexColumn={ indexColumn }
+            cellState={ valColumn }
+            cellSize={ props.cellSize }
+            fillOpacity = { props.fillOpacity }
+            stroke = { props.stroke } 
+            strokeWidth={ props.strokeWidth }
+            handleCellClick={ handleCellClick }
+          />
+        )
       }
 		</g>
 	);

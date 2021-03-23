@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, ButtonGroup, Button } from 'react-bootstrap';
 
-import { defaultCellSize, zoomStep, emptyFunction, renderLocalTransition, styleContainer } from './renderHelper';
+import LocalTransition from './LocalTransition';
+
+import { defaultCellSize, zoomStep, emptyFunction, styleContainer } from './renderHelper';
 
 
 const LocalMapping = React.memo(
@@ -23,12 +25,27 @@ const LocalMapping = React.memo(
           </Row>
           <Row>
             <Col style={ styleContainer } >
-              <svg width={ 50 } height={ props.localMapping.length * cellSize * 2 } 
-                      xmlns="http://www.w3.org/2000/svg">
+              <svg 
+                width = { 100 } 
+                height = { props.localMapping.length * cellSize * 2 } 
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 { 
-                  props.localMapping.map((elem, indElem) => 
-                    renderLocalTransition(indElem, indElem, elem[0], elem[1], 0, elem[0].length + 0.5, 2, cellSize,
-                      elem[2] ? ( () => props.handleChangeableCellClick(indElem) ) : ( emptyFunction ))
+                  props.localMapping.map( (elem, indElem) =>
+                    <LocalTransition
+                      key = { indElem }
+                      x = { 0 }
+                      y = { indElem * 2 * cellSize }
+                      localConfig = { elem[0] }
+                      result = { elem[1] }
+                      resultLineIndex = { 0 }
+                      resultColumnIndex = { elem[0].length + 0.5 }
+                      cellSize = { cellSize }
+                      fillOpacity = { 1 }
+                      stroke = { 'black' } 
+                      strokeWidth={ 1 }
+                      handleCellClick = { elem[2] ? () => props.handleChangeableCellClick(indElem) : emptyFunction }
+                    />
                   )
                 }
               </svg>
