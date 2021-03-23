@@ -1,4 +1,4 @@
-const defaultCellSize = 12;
+const defaultCellSize = 14;
 const zoomStep = 0.1;
 
 const styleContainer = {

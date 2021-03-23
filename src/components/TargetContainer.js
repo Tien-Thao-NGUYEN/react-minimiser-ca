@@ -38,7 +38,7 @@ const TargetContainer = React.memo(
               <Col xl={8} style={ {backgroundColor: 'lightgray'} }>
                  <Diagram
                     rule = { props.targetRule }
-                    size = { 0 }
+                    size = { 20 }
                   />
               </Col> : 
               <Col></Col>

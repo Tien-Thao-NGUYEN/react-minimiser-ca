@@ -24,8 +24,11 @@ const Diagram = React.memo(
   		<Container>
         <Row>
           <ButtonGroup size="sm">
-            <Button onClick={handleZoomInClick}>z+</Button>
-            <Button onClick={handleZoomOutClick}>z-</Button>
+            <Button onClick = { handleZoomInClick }> z+ </Button>
+            <Button onClick = { handleZoomOutClick }> z- </Button>
+            <Button> time </Button>
+            <Button> cellNumber </Button>
+            <Button> size </Button>
           </ButtonGroup>
         </Row>
   			<Row>

@@ -55,8 +55,10 @@ function App (props) {
     targetRelation.forEach( (rel, indRel) => {
       if (!targetRule.has(rel[0]))
         targetRule.set(rel[0], rel[1]);
-      else if (!targetRule.isDeterminismIfSet(rel[0], rel[1]))
+      else if (!targetRule.isDeterminismIfSet(rel[0], rel[1])) {
           lConfigErrorList.push(rel[0]);
+          setTargetRule(targetRule);
+        }
     } );
 
     console.log("Résultat:")
@@ -70,6 +72,7 @@ function App (props) {
     }
     else {
       console.log("Félicitation! Vous avez trouvé une solution!");
+      setIndexSRErrorByGroup([]);
       setTargetRule(targetRule);
     }
   }

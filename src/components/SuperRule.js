@@ -7,6 +7,10 @@ import { defaultCellSize, zoomStep, emptyFunction, styleContainer } from './rend
 import { initialSuperRule } from '../data/dataHelper';
 
 
+const indexBelongErr = (index, indexSRErrorByGroup) => {
+
+}
+
 const SuperRule = React.memo(function SuperRule(props) {
 	const [scale, setScale] = useState(1);
 
@@ -17,9 +21,9 @@ const SuperRule = React.memo(function SuperRule(props) {
 	return (
 		<Container>
 			<Row>
-				<ButtonGroup size="sm">
-					<Button onClick={handleZoomInClick}> z+ </Button>
-					<Button onClick={handleZoomOutClick}> z- </Button>
+				<ButtonGroup size = "sm">
+					<Button onClick = { handleZoomInClick }> z+ </Button>
+					<Button onClick = { handleZoomOutClick }> z- </Button>
 				</ButtonGroup>
 			</Row>
 			<Row>
@@ -30,41 +34,52 @@ const SuperRule = React.memo(function SuperRule(props) {
             xmlns="http://www.w3.org/2000/svg"
           >
 						{
-							initialSuperRule.map( ([quint, tripl], indSrList) => 
-                quint.length === tripl.length ?
-                  [ <Tuple
-                      key = { indSrList * 2 }
-                      x = { 1 }
-                      indexLine = { indSrList * 2 }
-                      tuple = { quint }
-                      cellSize = { cellSize }
-                      fillOpacity = { 1 }
-                      stroke = { 'black' } 
-                      strokeWidth={ 1 }
-                      handleCellClick = { emptyFunction }
-                    /> ] :
-                  [ <Tuple
-                      key = { (indSrList - 1.5) * 3 }
-                      x = { 0 }
-                      indexLine = { (indSrList - 1.5) * 3 }
-                      tuple = { quint }
-                      cellSize = { cellSize }
-                      fillOpacity = { 1 }
-                      stroke = { 'black' } 
-                      strokeWidth={ 1 }
-                      handleCellClick = { emptyFunction }
-                    />,
+							initialSuperRule.map( ([quint, tripl], indSrList) => {
+                if (quint.length === tripl.length) {
+                  var indexLine = indSrList * 2;
+                  var x = 1;
+                }
+                else{
+                  indexLine = (indSrList - 1.5) * 3;
+                  x = 0;
+                }
+
+                if (props.indexSRErrorByGroup.flat().includes(indSrList)) {
+                  var stroke = 'red';
+                  var strokeWidth = 3;
+                }
+                else {
+                  stroke = 'black';
+                  strokeWidth = 1;
+                }
+
+                const quintSVG =  <Tuple
+                                    key = { indexLine }
+                                    x = { x }
+                                    indexLine = { indexLine }
+                                    tuple = { quint }
+                                    cellSize = { cellSize }
+                                    fillOpacity = { 1 }
+                                    stroke = { stroke } 
+                                    strokeWidth={ strokeWidth }
+                                    handleCellClick = { emptyFunction }
+                                  />
+
+                return quint.length === tripl.length ?
+                  [ quintSVG ] :
+                  [ quintSVG,
                     <Tuple
-                      key = { (indSrList - 1.5) * 3 + 1 }
+                      key = { indexLine + 1 }
                       x = { 1 }
-                      indexLine = { (indSrList - 1.5) * 3 + 1 }
+                      indexLine = { indexLine + 1 }
                       tuple = { tripl }
                       cellSize = { cellSize }
                       fillOpacity = { 1 }
-                      stroke = { 'black' } 
-                      strokeWidth={ 1 }
+                      stroke = { stroke } 
+                      strokeWidth={ strokeWidth }
                       handleCellClick = { emptyFunction }
                     /> ]
+                }
               )
 						}
 					</svg>
