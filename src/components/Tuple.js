@@ -3,10 +3,6 @@ import React from 'react';
 import Cell from './Cell';
 
 const Tuple = React.memo(function Tuple(props) {
- 
-  const handleCellClick = (indexColumn) => {
-    props.handleCellClick(props.indexLine, indexColumn)
-  }
 
 	return (
 		<g 
@@ -23,7 +19,7 @@ const Tuple = React.memo(function Tuple(props) {
             fillOpacity = { props.fillOpacity }
             stroke = { props.stroke } 
             strokeWidth={ props.strokeWidth }
-            handleCellClick={ handleCellClick }
+            handleCellClick={ props.handleCellClick }
           />
         )
       }

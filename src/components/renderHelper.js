@@ -1,8 +1,8 @@
-const defaultCellSize = 14;
+const defaultCellSize = 12;
 const zoomStep = 0.1;
 
 const styleContainer = {
-                        'height': "85vh",
+                        'height': "90vh",
                         'overflowX': "auto",
                         'overflowY': "auto"
                       };

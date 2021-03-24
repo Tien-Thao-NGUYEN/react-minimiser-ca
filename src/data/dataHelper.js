@@ -78,7 +78,9 @@ function getInitialGConfig(size) {
 }
 
 var outSpaceState = MazoyerSolutionDataDt1["outSpaceState"];
+var nCellLeft = 1;
+var nCellRight = 1
 
 //can phai lam lai cai ghi vao JSON
 export { outSpaceState, initialSuperRuleIndex, initialLocalMapping, initialSuperRule, 
-  initialRule, getNextState, getInitialGConfig }
+  initialRule, getNextState, getInitialGConfig, nCellLeft, nCellRight}

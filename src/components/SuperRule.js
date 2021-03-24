@@ -7,10 +7,6 @@ import { defaultCellSize, zoomStep, emptyFunction, styleContainer } from './rend
 import { initialSuperRule } from '../data/dataHelper';
 
 
-const indexBelongErr = (index, indexSRErrorByGroup) => {
-
-}
-
 const SuperRule = React.memo(function SuperRule(props) {
 	const [scale, setScale] = useState(1);
 

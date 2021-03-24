@@ -4,11 +4,12 @@ import { getColor } from './renderHelper'
 
 //jouter text pour afficher état
 const Cell = React.memo((props) => {
+  const handleClick = () => props.handleCellClick(props.indexLine, props.indexColumn);
 	return (
     <g 
       transform = { "translate(" + (props.indexColumn * props.cellSize) 
                     + "," + (props.indexLine * props.cellSize) + ")" }
-      onClick = { () => props.handleCellClick(props.indexColumn) }
+      onClick = { handleClick }
     >
 			<rect 
 				x = { 0 } 

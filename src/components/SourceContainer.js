@@ -8,10 +8,10 @@ import { initialRule } from '../data/dataHelper';
 
 
 export default function SourceContainer(props) {
-  const [showDiagrame, setShowDiagram] = useState(true);
+  const [showDiagram, setShowDiagram] = useState(true);
   const [showSuperRule, setShowSuperRule] = useState(true);
 
-  const handlerShowDiagram = () => {var show = !showDiagrame; setShowDiagram(show)}; 
+  const handlerShowDiagram = () => {var show = !showDiagram; setShowDiagram(show)}; 
   const handlerShowSuperRule = () => {var show = !showSuperRule; setShowSuperRule(show)};
 
   return (
@@ -19,8 +19,8 @@ export default function SourceContainer(props) {
       <Row>
         <ButtonToolbar>
           <ButtonGroup size="sm">
-            <Button onClick={ handlerShowSuperRule }> show super rule </Button>
-            <Button onClick={ handlerShowDiagram }> show diagram </Button>
+            <Button onClick={ handlerShowSuperRule }> { showSuperRule ? "hide super rule" : "show super rule" } </Button>
+            <Button onClick={ handlerShowDiagram }> { showDiagram ? "hide diagram" : "show diagram" } </Button>
           </ButtonGroup>
         </ButtonToolbar>
       </Row>
@@ -35,7 +35,7 @@ export default function SourceContainer(props) {
             <Col></Col>
         }
         {
-          showDiagrame ?  
+          showDiagram ?  
             <Col xl={8} style={{backgroundColor: 'gray'}}>
               <Diagram
                  rule = { initialRule }

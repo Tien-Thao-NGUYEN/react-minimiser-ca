@@ -32,15 +32,15 @@ const LocalMapping = React.memo(
               >
                 { 
                   props.localMapping.map( (elem, indElem) => {
-                    if (!elem[2]) {
+                    if (elem[2] === undefined) {
                       var stroke = 'blue';
                       var strokeWidth = cellSize / 4;
-                      var handleCellClick = () => props.handleChangeableCellClick(indElem);
+                      var handleCellClick = emptyFunction;
                     }
                     else {
                       stroke = 'black';
                       strokeWidth = 1;
-                      handleCellClick = emptyFunction;
+                      handleCellClick = () => props.handleLocalMappingCellClick(indElem);
                     }
 
                     return <LocalTransition
