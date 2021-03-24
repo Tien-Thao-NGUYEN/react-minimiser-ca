@@ -31,22 +31,35 @@ const LocalMapping = React.memo(
                 xmlns="http://www.w3.org/2000/svg"
               >
                 { 
-                  props.localMapping.map( (elem, indElem) =>
-                    <LocalTransition
-                      key = { indElem }
-                      x = { 0 }
-                      y = { indElem * 2 * cellSize }
-                      localConfig = { elem[0] }
-                      result = { elem[1] }
-                      resultLineIndex = { 0 }
-                      resultColumnIndex = { elem[0].length + 0.5 }
-                      cellSize = { cellSize }
-                      fillOpacity = { 1 }
-                      stroke = { 'black' } 
-                      strokeWidth={ 1 }
-                      handleCellClick = { elem[2] ? () => props.handleChangeableCellClick(indElem) : emptyFunction }
-                    />
-                  )
+                  props.localMapping.map( (elem, indElem) => {
+                    if (!elem[2]) {
+                      var stroke = 'blue';
+                      var strokeWidth = cellSize / 4;
+                      var handleCellClick = () => props.handleChangeableCellClick(indElem);
+                    }
+                    else {
+                      stroke = 'black';
+                      strokeWidth = 1;
+                      handleCellClick = emptyFunction;
+                    }
+
+                    return <LocalTransition
+                              key = { indElem }
+                              x = { 0 }
+                              y = { indElem * 2 * cellSize }
+                              localConfig = { elem[0] }
+                              result = { elem[1] }
+                              resultLineIndex = { 0 }
+                              resultColumnIndex = { elem[0].length + 0.5 }
+                              cellSize = { cellSize }
+                              fillOpacity = { 1 }
+                              stroke = { stroke } 
+                              strokeWidth={ strokeWidth }
+                              handleCellClick = { handleCellClick }
+                            />
+                    
+                    
+                  })
                 }
               </svg>
             </Col>

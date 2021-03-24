@@ -22,10 +22,10 @@ const Cell = React.memo((props) => {
 			/>
 
       <text 
-        x = { props.cellSize / 5 } 
-        y = { props.cellSize - (props.cellSize / 6)}
+        x = { props.cellSize / 4 } 
+        y = { props.cellSize - (props.cellSize / 5)}
         fontFamily = { "Verdana" }
-        fontSize = { props.cellSize * 0.9}
+        fontSize = { props.cellSize * 0.8}
       >
           {props.cellState}
       </text>

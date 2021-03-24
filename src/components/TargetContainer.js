@@ -18,21 +18,12 @@ const TargetContainer = React.memo(
         <Row>
           <ButtonToolbar>
             <ButtonGroup size="sm">
-              <Button onClick={ handlerShowTargetRule }> show target rule </Button>
               <Button onClick={ handlerShowDiagram }> show diagram </Button>
+              <Button onClick={ handlerShowTargetRule }> show target rule </Button>
             </ButtonGroup>
           </ButtonToolbar>
         </Row>
         <Row>
-          {
-            showTargetRule ?
-              <Col xl={4} style={ {backgroundColor: 'yellow'} }>
-                <GeneratedRule
-                  targetRule = { props.targetRule }
-                />
-              </Col> :
-              <Col></Col>
-          }
           {
             showDiagrame ?
               <Col xl={8} style={ {backgroundColor: 'lightgray'} }>
@@ -41,6 +32,15 @@ const TargetContainer = React.memo(
                     size = { 20 }
                   />
               </Col> : 
+              <Col></Col>
+          }
+          {
+            showTargetRule ?
+              <Col xl={4} style={ {backgroundColor: 'yellow'} }>
+                <GeneratedRule
+                  targetRule = { props.targetRule }
+                />
+              </Col> :
               <Col></Col>
           }
         </Row>

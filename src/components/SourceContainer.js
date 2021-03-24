@@ -19,27 +19,27 @@ export default function SourceContainer(props) {
       <Row>
         <ButtonToolbar>
           <ButtonGroup size="sm">
-            <Button onClick={ handlerShowDiagram }> show diagram </Button>
             <Button onClick={ handlerShowSuperRule }> show super rule </Button>
+            <Button onClick={ handlerShowDiagram }> show diagram </Button>
           </ButtonGroup>
         </ButtonToolbar>
       </Row>
       <Row>
         {
-          showDiagrame ?  
-            <Col xl={8} style={{backgroundColor: 'gray'}}>
-              <Diagram
-                 rule = { initialRule }
-                 size = { 20 }
+          showSuperRule ?
+            <Col xl={4} style={ {backgroundColor: 'lightgray'} }>
+              <SuperRule
+                indexSRErrorByGroup = { props.indexSRErrorByGroup }
               />
             </Col> : 
             <Col></Col>
         }
         {
-          showSuperRule ?
-            <Col xl={4} style={ {backgroundColor: 'lightgray'} }>
-              <SuperRule
-                indexSRErrorByGroup = { props.indexSRErrorByGroup }
+          showDiagrame ?  
+            <Col xl={8} style={{backgroundColor: 'gray'}}>
+              <Diagram
+                 rule = { initialRule }
+                 size = { 30 }
               />
             </Col> : 
             <Col></Col>
