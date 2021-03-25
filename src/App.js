@@ -4,18 +4,15 @@ import { Container, Row, Col, ButtonGroup, Button } from 'react-bootstrap';
 import SourceContainer from './components/SourceContainer';
 import TargetContainer from './components/TargetContainer';
 import LocalMapping from './components/LocalMapping';
-import TransitionTable from './simulator/TransitionTable';
-import Diagram from './components/Diagram';
 
-import { initialRule, initialLocalMapping, getNextState, getInitialGConfig, outSpaceState, nCellLeft, nCellRight } from './data/dataHelper';
-import { nextGConfig, simulate } from './simulator/simulator';
+import { initialRule, initialLocalMapping, getNextState, getInitialGConfig, 
+  outSpaceState, nCellLeft, nCellRight, initialSuperRule } from './data/dataHelper';
+import { buildTargetDiagramFromLocalMapping, simulate } from './simulator/simulator';
 
 
 //NOTE: 
 
-//Tao ra 2 fct cho viec mouseEnter va mouseOver trong App de lien lac voi 2 container.
-
-//Dung superRuleIndex de su dung cho viec check localMapping khi targetDgm det nhung ko biet targetRule co det ko.
+//Cho superRule vao trong 1 variable trong App trong viec check localMapping khi targetDgm det nhung ko biet targetRule co det ko.
 
 //lam list undo/redo  //undo/redo: luu lai thay doi trong LM vao 1 cai list là ok
 
@@ -34,38 +31,34 @@ import { nextGConfig, simulate } from './simulator/simulator';
 
 
 const localMapping = initialLocalMapping;
-
-const buildTargetDiagram = (sourceDiagram) => {
-  const targetDiagrame = [[...sourceDiagram[0]]];
-  for (var time = 0; time <= sourceDiagram.length - 2; time++) {
-    const targetGConfig = nextGConfig(localMapping, sourceDiagram[time], outSpaceState, nCellLeft, nCellRight);
-    targetDiagrame.push(targetGConfig);
-  }
-
-  return targetDiagrame;
-}
-
-
-//co van de la khi sua o day dgm ko render lai
+const superRule = initialSuperRule;
 const sizeInit = 25;//max size = 48
 
 function App (props) {
   const [size, setSize] = useState(sizeInit);
+  const [sourceDiagram, setSourceDiagram] = useState(
+          simulate(initialRule, getInitialGConfig(size), outSpaceState, nCellLeft, nCellRight));
   const [localMappingList, setLocalMappingList] = useState(initialLocalMapping.getTable());
-  const [sourceDiagram, setSourceDiagram] = useState(simulate(initialRule, getInitialGConfig(size), outSpaceState, nCellLeft, nCellRight));
-  const [targetDiagram, setTargetDiagram] = useState(buildTargetDiagram(sourceDiagram));
-
+  const [targetDiagram, setTargetDiagram] = useState(
+          buildTargetDiagramFromLocalMapping(initialLocalMapping, sourceDiagram, outSpaceState, 
+                                                                          nCellLeft, nCellRight));
+  const [locationOnMouseEnter, setLocationOnMouseEnter] = useState( { time : -1, position : -1 } );
   
-
+  const handleTargetErrorCellClick = (time, position) => {
+    setLocationOnMouseEnter( { time : time, position : position } );
+  }
+  
   const handleLocalMappingCellClick = (indexLine) => {
     const lmElement = localMappingList[indexLine];
     const nextState = getNextState(lmElement[1].state);
     localMapping.get(lmElement[0]).state = nextState;
     setLocalMappingList(localMapping.getTable());
 
-    const newTargetDiagrame = buildTargetDiagram(sourceDiagram);
+    const newTargetDiagrame = buildTargetDiagramFromLocalMapping(localMapping, sourceDiagram,
+      outSpaceState, nCellRight, nCellRight);
     setTargetDiagram(newTargetDiagrame);
   }
+
 
   return (
     <Container fluid style={ {'height': "100vh", backgroundColor:"green"} }>
@@ -79,6 +72,7 @@ function App (props) {
         >
           <SourceContainer
             sourceDiagram = { sourceDiagram }
+            locationOnMouseEnter = { locationOnMouseEnter }
           />
         </Col>
         <Col 
@@ -97,6 +91,7 @@ function App (props) {
           <TargetContainer
             sourceDiagram = { sourceDiagram }
             targetDiagram = { targetDiagram }
+            handleTargetErrorCellClick = { handleTargetErrorCellClick }
           />
         </Col>
       </Row>

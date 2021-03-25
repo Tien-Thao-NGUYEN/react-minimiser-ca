@@ -54,4 +54,14 @@ const nextGConfig = (localMapping, currentGConfig, outSpaceState, nCellLeft, nCe
   return nextGConfig;
 }
 
-export { nextGConfig, simulate };
+const buildTargetDiagramFromLocalMapping = (localMapping, sourceDiagram, outSpaceState, nCellLeft, nCellRight) => {
+  const targetDiagrame = [[...sourceDiagram[0]]];
+  for (var time = 0; time <= sourceDiagram.length - 2; time++) {
+    const targetGConfig = nextGConfig(localMapping, sourceDiagram[time], outSpaceState, nCellLeft, nCellRight);
+    targetDiagrame.push(targetGConfig);
+  }
+
+  return targetDiagrame;
+}
+
+export { buildTargetDiagramFromLocalMapping, simulate };

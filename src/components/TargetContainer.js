@@ -5,11 +5,12 @@ import GeneratedRule from './GeneratedRule';
 import Diagram from './Diagram';
 import TransitionTable from '../simulator/TransitionTable';
 
+import { emptyFunction } from './renderHelper';
 import { outSpaceState, nCellLeft, nCellRight } from '../data/dataHelper';
 
 
 const TargetContainer = React.memo(
-  function TargetContainer({ sourceDiagram, targetDiagram }) {
+  function TargetContainer({ sourceDiagram, targetDiagram, handleTargetErrorCellClick }) {
     const [showDiagram, setShowDiagram] = useState(true);
     const [showTargetRule, setShowTargetRule] = useState(true);
     const handlerShowTargetRule = () => {var show = !showTargetRule; setShowTargetRule(show)};
@@ -84,20 +85,22 @@ const TargetContainer = React.memo(
             var fillOpacity = 1;
             var stroke = 'black';
             var strokeWidth = 3;
-            var stateColor = errorGConfig[position] ? 'red' : 'black';
           }
           else {
             fillOpacity = 0.1;
             stroke = 'gray';
             strokeWidth = 1;
-            stateColor = errorGConfig[position] ? 'red' : 'black';
           }
+
+          var stateColor = errorGConfig[position] ? 'red' : 'black';
+          var handleCellClick = errorGConfig[position] ? handleTargetErrorCellClick : emptyFunction;
 
           const infoCell = {  state : targetGConfig[position],
                               stateColor : stateColor,
                               fillOpacity : fillOpacity,
                               stroke : stroke,
-                              strokeWidth : strokeWidth
+                              strokeWidth : strokeWidth,
+                              handleCellClick : handleCellClick
                            }
           infoGConfig.push(infoCell);
         }
@@ -112,7 +115,9 @@ const TargetContainer = React.memo(
 
     return (
       <Container>
-        <Row>
+        <Row
+          style = { {backgroundColor: 'lightgray'} }
+        >
           <ButtonToolbar>
             <ButtonGroup size="sm">
               <Button onClick = { handlerShowDiagram }> { showDiagram ? "hide diagram" : "show diagram" } </Button>
@@ -125,7 +130,6 @@ const TargetContainer = React.memo(
             showDiagram ?
               <Col 
                 xl = { 8 } 
-                style = { {backgroundColor: 'lightgray'} }
               >
                  <Diagram
                     infoDiagram = { infoDiagram() }
@@ -137,7 +141,6 @@ const TargetContainer = React.memo(
             showTargetRule ?
               <Col 
                 xl = { 4 } 
-                style = { {backgroundColor: 'yellow'} }
               >
                 <GeneratedRule
                   targetRule = { new TransitionTable() }

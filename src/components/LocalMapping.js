@@ -33,8 +33,8 @@ const LocalMapping = React.memo(
                 { 
                   props.localMapping.map( (elem, indElem) => {
                     if (elem[1].mutable === undefined) {
-                      var stroke = 'red';
-                      var strokeWidth = 3 * scale;
+                      var stroke = 'black';
+                      var strokeWidth = scale;
                       var handleCellClick = emptyFunction;
                       var stateColor = 'red';
                     }

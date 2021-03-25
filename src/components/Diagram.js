@@ -12,7 +12,6 @@ const Diagram = React.memo(
 
   	const handleZoomInClick = () => setScale(scale + zoomStep);
   	const handleZoomOutClick = () => setScale(scale - zoomStep);
-    const handleCellClick = (indexLine, indexColumn) => {console.log("click on ", indexLine, " ", indexColumn)};
 
     var cellSize = defaultCellSize * scale;
 
@@ -29,10 +28,10 @@ const Diagram = React.memo(
                           cellState = { infoCell.state }
                           cellSize = { cellSize }
                           fillOpacity = { infoCell.fillOpacity }
-                          stroke = { infoCell.stroke } 
-                          strokeWidth = { infoCell.strokeWidth }
+                          stroke = { infoCell.stroke }
+                          strokeWidth = { infoCell.strokeWidth * scale}
                           stateColor = { infoCell.stateColor }
-                          handleCellClick = { handleCellClick }
+                          handleCellClick = { infoCell.handleCellClick }
                         />
 
           if (infoCell.strokeWidth === 3)

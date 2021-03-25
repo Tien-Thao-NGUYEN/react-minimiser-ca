@@ -5,8 +5,8 @@ import LocalTransition from './LocalTransition';
 
 import { defaultCellSize, zoomStep, emptyFunction, styleContainer } from './renderHelper';
 
-//il faut que App passe une fct pour les erreurs de set dans map
-/*const GeneratedRule = React.memo(*/
+
+const GeneratedRule = React.memo(
   function GeneratedRule(props) {
   	const [scale, setScale] = useState(1);
 
@@ -54,6 +54,6 @@ import { defaultCellSize, zoomStep, emptyFunction, styleContainer } from './rend
     		</Container>
   	 );
   }
-/*);*/
+);
 
 export default GeneratedRule;
