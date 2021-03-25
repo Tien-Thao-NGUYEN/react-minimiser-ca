@@ -32,9 +32,9 @@ const LocalMapping = React.memo(
               >
                 { 
                   props.localMapping.map( (elem, indElem) => {
-                    if (elem[2] === undefined) {
-                      var stroke = 'black';
-                      var strokeWidth = 2 * scale;
+                    if (elem[1].mutable === undefined) {
+                      var stroke = 'red';
+                      var strokeWidth = 3 * scale;
                       var handleCellClick = emptyFunction;
                       var stateColor = 'red';
                     }
@@ -50,7 +50,7 @@ const LocalMapping = React.memo(
                               x = { 0 }
                               y = { indElem * 2 * cellSize }
                               localConfig = { elem[0] }
-                              result = { elem[1] }
+                              result = { elem[1].state }
                               resultLineIndex = { 0 }
                               resultColumnIndex = { elem[0].length + 0.5 }
                               cellSize = { cellSize }
@@ -60,8 +60,6 @@ const LocalMapping = React.memo(
                               handleCellClick = { handleCellClick }
                               stateColor = { stateColor }
                             />
-                    
-                    
                   })
                 }
               </svg>

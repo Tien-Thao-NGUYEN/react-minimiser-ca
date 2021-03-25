@@ -15,7 +15,7 @@ const getColor = (state) => {
 		case '1': return 'green';
 		case '2': return 'orange';
 		case '3': return 'cyan';
-		case '4': return 'magenta';
+		case '4': return 'lightgreen';
 		case '5': return 'blue';
 		case '6': return 'gray';
 		default : return 'black';

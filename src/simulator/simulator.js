@@ -6,11 +6,11 @@ const oneStep = (transitionTable, currentGConfig, outSpaceState, nCellLeft, nCel
   const lConfigSize = nCellLeft + 1 + nCellRight;
   const nextGConfig = [];
   for (var position = 0; position < currentGConfig.length; position++) {
-    const nextState = transitionTable.get(currentGConfigShallow.slice(position, position + lConfigSize));
-    if (nextState === undefined)
+    const nextResult = transitionTable.get(currentGConfigShallow.slice(position, position + lConfigSize));
+    if (nextResult === undefined)
       return [false, nextGConfig];
 
-    nextGConfig.push(nextState);
+    nextGConfig.push(nextResult.state);
   }
 
   return [true, nextGConfig];
@@ -38,7 +38,7 @@ const simulate = (transitionTable, initialGConfig, outSpaceState, nCellLeft, nCe
 }
 
 //dung trong App de lay targetDiagram
-const nextGConfig = (transitionTable, currentGConfig, outSpaceState, nCellLeft, nCellRight) => {
+const nextGConfig = (localMapping, currentGConfig, outSpaceState, nCellLeft, nCellRight) => {
   const currentGConfigShallow = [ ...Array(nCellLeft).fill(outSpaceState), 
                                 ...currentGConfig,
                                 ...Array(nCellRight).fill(outSpaceState) ];
@@ -46,8 +46,9 @@ const nextGConfig = (transitionTable, currentGConfig, outSpaceState, nCellLeft, 
   const lConfigSize = nCellLeft + 1 + nCellRight;
   const nextGConfig = [];
   for (var position = 0; position < currentGConfig.length; position++) {
-    const nextState = transitionTable.get(currentGConfigShallow.slice(position, position + lConfigSize));
-    nextGConfig.push(nextState);
+    const lConfig = currentGConfigShallow.slice(position, position + lConfigSize);
+    const nextResult = localMapping.get(lConfig);
+    nextGConfig.push(nextResult.state);
   }
 
   return nextGConfig;

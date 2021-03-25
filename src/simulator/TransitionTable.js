@@ -29,3 +29,4 @@ export default class TransitionTable extends Map {
       return old_value === value;
   }
 }
+//Tao fct static cho viec init voi table

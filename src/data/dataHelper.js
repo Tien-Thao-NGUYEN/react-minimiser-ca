@@ -43,16 +43,20 @@ function getSuperRule() {
 }
 
 function getLocalMapping() {
-  var localMapping =  [...MazoyerSolutionDataDt1["local_mapping"]["0"],
+  const list =  [...MazoyerSolutionDataDt1["local_mapping"]["0"],
                         ...MazoyerSolutionDataDt1["local_mapping"]["1"]];
-  var changeable_index_list = MazoyerSolutionDataDt1["changeable_index_list"];
-  changeable_index_list.forEach(e => localMapping[e].push(true));
+  const changeable_index_list = MazoyerSolutionDataDt1["changeable_index_list"];
+  changeable_index_list.forEach(e => list[e].push(true));
+  const localMapping = new TransitionTable();
+  list.forEach( e => localMapping.set(e[0], { state:e[1], mutable:e[2] }) );
+  
   return localMapping;
 }
 
 function getRule() {
   var rule = new TransitionTable();
-  MazoyerSolutionDataDt1["local_mapping"]["1"].forEach(([lc, res]) => rule.set(lc, res));
+  MazoyerSolutionDataDt1["local_mapping"]["1"]
+    .forEach( ([lc, res]) => rule.set(lc, {state:res, mutable:undefined}) );
   return rule;
 }
 

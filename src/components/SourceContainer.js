@@ -7,39 +7,53 @@ import Diagram from './Diagram';
 import { initialRule } from '../data/dataHelper';
 
 
-export default function SourceContainer(props) {
+export default function SourceContainer( {sourceDiagram} ) {
   const [showDiagram, setShowDiagram] = useState(true);
-  const [showSuperRule, setShowSuperRule] = useState(true);
-
   const handlerShowDiagram = () => {var show = !showDiagram; setShowDiagram(show)}; 
-  const handlerShowSuperRule = () => {var show = !showSuperRule; setShowSuperRule(show)};
+
+  const infoDiagram = () => {
+      const infoDiagram = [];
+      for (var time = 0; time < sourceDiagram.length; time++) {
+        const sourceGConfig = sourceDiagram[time];
+        const infoGConfig = [];
+        for (var position = 0; position < sourceGConfig.length; position++) {
+            var fillOpacity = 1;
+            var stroke = 'gray';
+            var strokeWidth = 1;
+            var stateColor = 'black';
+
+          const infoCell = {  state : sourceGConfig[position],
+                              stateColor : stateColor,
+                              fillOpacity : fillOpacity,
+                              stroke : stroke,
+                              strokeWidth : strokeWidth
+                           }
+          infoGConfig.push(infoCell);
+        }
+
+        infoDiagram.push(infoGConfig);
+      }
+
+      return infoDiagram;
+    }
 
   return (
     <Container>
       <Row>
         <ButtonToolbar>
           <ButtonGroup size="sm">
-            <Button onClick={ handlerShowSuperRule }> { showSuperRule ? "hide super rule" : "show super rule" } </Button>
-            <Button onClick={ handlerShowDiagram }> { showDiagram ? "hide diagram" : "show diagram" } </Button>
+            <Button onClick = { handlerShowDiagram }> { showDiagram ? "hide diagram" : "show diagram" } </Button>
           </ButtonGroup>
         </ButtonToolbar>
       </Row>
       <Row>
         {
-          showSuperRule ?
-            <Col xl={4} style={ {backgroundColor: 'lightgray'} }>
-              <SuperRule
-                indexSRErrorByGroup = { props.indexSRErrorByGroup }
-              />
-            </Col> : 
-            <Col></Col>
-        }
-        {
           showDiagram ?  
-            <Col xl={8} style={{backgroundColor: 'gray'}}>
+            <Col 
+              xl = { 8 }
+            >
               <Diagram
-                 rule = { initialRule }
-                 size = { 30 }
+                infoDiagram = { infoDiagram() }
               />
             </Col> : 
             <Col></Col>
