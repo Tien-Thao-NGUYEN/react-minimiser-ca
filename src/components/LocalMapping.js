@@ -33,14 +33,16 @@ const LocalMapping = React.memo(
                 { 
                   props.localMapping.map( (elem, indElem) => {
                     if (elem[2] === undefined) {
-                      var stroke = 'blue';
-                      var strokeWidth = cellSize / 4;
+                      var stroke = 'black';
+                      var strokeWidth = 2 * scale;
                       var handleCellClick = emptyFunction;
+                      var stateColor = 'red';
                     }
                     else {
                       stroke = 'black';
                       strokeWidth = 1;
                       handleCellClick = () => props.handleLocalMappingCellClick(indElem);
+                      stateColor = 'black';
                     }
 
                     return <LocalTransition
@@ -56,6 +58,7 @@ const LocalMapping = React.memo(
                               stroke = { stroke } 
                               strokeWidth={ strokeWidth }
                               handleCellClick = { handleCellClick }
+                              stateColor = { stateColor }
                             />
                     
                     

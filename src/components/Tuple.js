@@ -20,6 +20,7 @@ const Tuple = React.memo(function Tuple(props) {
             stroke = { props.stroke } 
             strokeWidth={ props.strokeWidth }
             handleCellClick={ props.handleCellClick }
+            stateColor = { props.stateColor }
           />
         )
       }

@@ -56,12 +56,13 @@ const Diagram = React.memo(
         diagramError.push(Array(props.targetDiagram[time].length).fill(false));
 
       for (time = 0; time <= diagramError.length - 2; time++) {
-        const currentTargetGConfig = [ ...Array(nCellLeft).fill(outSpaceState), 
-                                ...props.targetDiagram[time],
-                                ...Array(nCellRight).fill(outSpaceState) ];
+        const currentTargetGConfig = [...Array(nCellLeft).fill(outSpaceState), 
+                                      ...props.targetDiagram[time],
+                                      ...Array(nCellRight).fill(outSpaceState) ];
         for (var position = 0; position < diagramError[time].length; position++) {
           const lConfig = currentTargetGConfig.slice(position, position + lConfigSize);
           if (lConfigErrorSet.has(lConfig)) {
+            //cho nay co the lay 1 cai list [time, position] de dung cho viec entourer dgmSrc
             /*console.log(lConfigErrorSet, " has ", lConfig);*/
             const beginPos = position - nCellLeft;
             const endPos = position + nCellRight;
@@ -87,28 +88,31 @@ const Diagram = React.memo(
         for (var position = 0; position < sourceGConfig.length; position++) {
           if (sourceGConfig[position] !== targetGConfig[position]) {
             var fillOpacity = props.fillOpacityDiff;
-            var stroke = diagramError[time][position] ? 'red' : 'black';
+            var stroke = 'black';
             var strokeWidth = 3 * scale;
+            var stateColor = diagramError[time][position] ? 'red' : 'black';
           }
           else {
             fillOpacity = props.fillOpacitySame;
-            stroke = diagramError[time][position] ? 'red' : 'gray';
-            strokeWidth = (diagramError[time][position] ? 3 : 1) * scale;
+            stroke = 'gray';
+            strokeWidth = 1;
+            stateColor = diagramError[time][position] ? 'red' : 'black';
           }
 
           const cell =  <Cell
                           key = { time * sourceGConfig.length + position }
-                          indexLine={ time }
-                          indexColumn={ position }
-                          cellState={ targetGConfig[position] }
-                          cellSize={ cellSize }
+                          indexLine = { time }
+                          indexColumn = { position }
+                          cellState = { targetGConfig[position] }
+                          cellSize = { cellSize }
                           fillOpacity = { fillOpacity }
                           stroke = { stroke } 
-                          strokeWidth={ strokeWidth }
-                          handleCellClick={ handleCellClick }
+                          strokeWidth = { strokeWidth }
+                          handleCellClick = { handleCellClick }
+                          stateColor = { stateColor }
                         />
 
-          if (sourceGConfig[position] !== targetGConfig[position] || diagramError[time][position])
+          if (sourceGConfig[position] !== targetGConfig[position])
             cellCollection.push(cell);
           else
             cellCollection.unshift(cell);

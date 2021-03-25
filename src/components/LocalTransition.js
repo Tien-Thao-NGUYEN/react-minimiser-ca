@@ -23,6 +23,7 @@ export default function LocalTransition(props) {
           stroke = { props.stroke } 
           strokeWidth = { props.strokeWidth }
           handleCellClick = { emptyFunction }
+          stateColor = { props.stateColor }
         />
       }
 
@@ -37,6 +38,7 @@ export default function LocalTransition(props) {
           stroke = { props.stroke } 
           strokeWidth = { props.strokeWidth }
           handleCellClick = { props.handleCellClick }
+          stateColor = { props.stateColor }
         />
       }
 		</g>

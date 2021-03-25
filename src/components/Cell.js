@@ -10,6 +10,8 @@ const Cell = React.memo((props) => {
       transform = { "translate(" + (props.indexColumn * props.cellSize) 
                     + "," + (props.indexLine * props.cellSize) + ")" }
       onClick = { handleClick }
+      //onMouseEnter = { () => console.log("mouse enter ", props.indexLine, " ", props.indexColumn) }
+      //onMouseOver = { () => console.log("mouse over ", props.indexLine, " ", props.indexColumn) }
     >
 			<rect 
 				x = { 0 } 
@@ -26,7 +28,9 @@ const Cell = React.memo((props) => {
         x = { props.cellSize / 4 } 
         y = { props.cellSize - (props.cellSize / 5)}
         fontFamily = { "Verdana" }
+        fontWeight = { "bolder" }
         fontSize = { props.cellSize * 0.8}
+        fill = { props.stateColor }
       >
           {props.cellState}
       </text>
