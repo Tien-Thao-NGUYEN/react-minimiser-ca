@@ -55,6 +55,9 @@ const nextGConfig = (localMapping, currentGConfig, outSpaceState, nCellLeft, nCe
 }
 
 const buildTargetDiagramFromLocalMapping = (localMapping, sourceDiagram, outSpaceState, nCellLeft, nCellRight) => {
+  if (sourceDiagram.length === 0)
+    return [];
+  
   const targetDiagrame = [[...sourceDiagram[0]]];
   for (var time = 0; time <= sourceDiagram.length - 2; time++) {
     const targetGConfig = nextGConfig(localMapping, sourceDiagram[time], outSpaceState, nCellLeft, nCellRight);

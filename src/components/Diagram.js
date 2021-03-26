@@ -60,7 +60,7 @@ const Diagram = React.memo(
             style={ styleContainer } 
           >
     				<svg 
-              width = { infoDiagram[0].length * cellSize } 
+              width = { infoDiagram.length === 0 ? 0 : infoDiagram[0].length * cellSize } 
               height= { infoDiagram.length * cellSize } 
               xmlns="http://www.w3.org/2000/svg"
             >

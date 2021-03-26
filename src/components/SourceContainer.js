@@ -5,6 +5,7 @@ import SuperRule from './SuperRule';
 import Diagram from './Diagram';
 
 import { initialRule } from '../data/dataHelper';
+import { emptyFunction } from './renderHelper';
 
 
 const SourceContainer = React.memo(
@@ -22,23 +23,24 @@ const SourceContainer = React.memo(
                 && (position === locationOnMouseEnter.position - 1
                   || position === locationOnMouseEnter.position
                   || position === locationOnMouseEnter.position + 1)) {
-                    var fillOpacity = 1;
                     var stroke = 'black';
                     var strokeWidth = 3;
-                    var stateColor = 'black';
+                    
               }
               else{
-                fillOpacity = 1;
                 stroke = 'gray';
                 strokeWidth = 1;
-                stateColor = 'black';  
-              } 
+              }
+
+              var fillOpacity = 1;
+              var stateColor = 'black';
   
               const infoCell = {  state : sourceGConfig[position],
                                   stateColor : stateColor,
                                   fillOpacity : fillOpacity,
                                   stroke : stroke,
-                                  strokeWidth : strokeWidth
+                                  strokeWidth : strokeWidth,
+                                  handleCellClick : emptyFunction
                                }
               infoGConfig.push(infoCell);
             }

@@ -12,10 +12,9 @@ import { outSpaceState, nCellLeft, nCellRight } from '../data/dataHelper';
 const TargetContainer = React.memo(
   function TargetContainer({ sourceDiagram, targetDiagram, handleTargetErrorCellClick }) {
     const [showDiagram, setShowDiagram] = useState(true);
-    const [showTargetRule, setShowTargetRule] = useState(true);
+    const [showTargetRule, setShowTargetRule] = useState(false);
     const handlerShowTargetRule = () => {var show = !showTargetRule; setShowTargetRule(show)};
     const handlerShowDiagram = () => {var show = !showDiagram; setShowDiagram(show)};
-
 
     const findLConfigErrorSet = () => {
       const relationTable = new TransitionTable();
@@ -80,6 +79,7 @@ const TargetContainer = React.memo(
         const targetGConfig = targetDiagram[time];
         const errorGConfig = errorDiagram[time];
         const infoGConfig = [];
+
         for (var position = 0; position < sourceGConfig.length; position++) {
           if (sourceGConfig[position] !== targetGConfig[position]) {
             var fillOpacity = 1;
