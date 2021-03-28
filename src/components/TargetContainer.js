@@ -6,7 +6,7 @@ import Diagram from './Diagram';
 import TransitionTable from '../simulator/TransitionTable';
 
 import { emptyFunction } from './renderHelper';
-import { outSpaceState, nCellLeft, nCellRight } from '../data/dataHelper';
+import { outSpaceState, nCellLeft, nCellRight } from '../data/parseData';
 
 
 const TargetContainer = React.memo(
@@ -111,7 +111,41 @@ const TargetContainer = React.memo(
       return infoDiagram;
     }
 
+    function renderTargetRule(key, nbrColumn) {
+      return <Col 
+                key = { key }
+                xl = { nbrColumn } 
+              >
+                <GeneratedRule
+                  targetRule = { new TransitionTable() }
+                />
+              </Col>
+    }
 
+    function renderDiagram(key, nbrColumn) {
+      return <Col 
+              key = { key }
+              xl = { nbrColumn } 
+            >
+               <Diagram
+                  infoDiagram = { infoDiagram() }
+                />
+            </Col>
+    }
+
+
+    function render() {
+      if (showTargetRule && showDiagram) 
+        return [renderDiagram(1, 8), renderTargetRule(2, 4)];
+
+      if (showTargetRule && !showDiagram)
+        return [renderTargetRule(1, 12)]
+
+      if (!showTargetRule && showDiagram)
+        return [renderDiagram(1, 12)]
+
+      return [];
+    }
 
     return (
       <Container>
@@ -126,28 +160,7 @@ const TargetContainer = React.memo(
           </ButtonToolbar>
         </Row>
         <Row>
-          {
-            showDiagram ?
-              <Col 
-                xl = { 8 } 
-              >
-                 <Diagram
-                    infoDiagram = { infoDiagram() }
-                  />
-              </Col> : 
-              <Col></Col>
-          }
-          {
-            showTargetRule ?
-              <Col 
-                xl = { 4 } 
-              >
-                <GeneratedRule
-                  targetRule = { new TransitionTable() }
-                />
-              </Col> :
-              <Col></Col>
-          }
+          { render() }
         </Row>
       </Container>
     );

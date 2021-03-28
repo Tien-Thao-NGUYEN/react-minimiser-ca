@@ -32,7 +32,7 @@ const LocalMapping = React.memo(
               >
                 { 
                   props.localMapping.map( (elem, indElem) => {
-                    if (elem[1].mutable === undefined) {
+                    if (elem[1].mutable === false) {
                       var stroke = 'black';
                       var strokeWidth = scale;
                       var handleCellClick = emptyFunction;

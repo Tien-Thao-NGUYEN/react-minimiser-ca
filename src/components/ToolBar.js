@@ -46,12 +46,20 @@ const ToolBar = React.memo(
             <Button 
               variant = "outline-success"
               onClick = { handleSizeButtonOnClick }
-            >
-              Set Size
-            </Button>
+            > Set Size </Button>
           </Form>
-          <Button onClick = { props.handleUndoClick }> Undo </Button>
-          <Button onClick = { props.handleRedoClick }> Redo </Button>
+          <Button
+            variant = "outline-success"
+            onClick = { props.handleCheckLocalMapping }
+          > Check Local Mapping </Button>
+          <Button
+            variant = "outline-success" 
+            onClick = { props.handleUndoClick }
+          > Undo </Button>
+          <Button
+            variant = "outline-success" 
+            onClick = { props.handleRedoClick }
+          > Redo </Button>
         </Navbar.Collapse>
       </Navbar>
     );

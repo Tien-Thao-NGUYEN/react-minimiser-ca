@@ -7,8 +7,10 @@ const oneStep = (transitionTable, currentGConfig, outSpaceState, nCellLeft, nCel
   const nextGConfig = [];
   for (var position = 0; position < currentGConfig.length; position++) {
     const nextResult = transitionTable.get(currentGConfigShallow.slice(position, position + lConfigSize));
-    if (nextResult === undefined)
+    if (nextResult === undefined) {
+      /*console.log(currentGConfigShallow.slice(position, position + lConfigSize));*/
       return [false, nextGConfig];
+    }
 
     nextGConfig.push(nextResult.state);
   }

@@ -6,34 +6,36 @@ import TargetContainer from './components/TargetContainer';
 import LocalMapping from './components/LocalMapping';
 import ToolBar from './components/ToolBar';
 
-import { initialRule, initialLocalMapping, getNextState, getInitialGConfig, 
-  outSpaceState, nCellLeft, nCellRight, initialSuperRule } from './data/dataHelper';
 import { buildTargetDiagramFromLocalMapping, simulate } from './simulator/simulator';
+import TransitionTable from './simulator/TransitionTable';
+import { initRule, initSuperRule, initLocalMapping, getNextState, outSpaceState, dt, nCellLeft, nCellRight, getInitGConfig } from './data/parseData';
 
 
 //NOTE: 
-
-//Cho superRule vao trong 1 variable trong App trong viec check localMapping khi targetDgm det nhung ko biet targetRule co det ko.
-
-//Luu state actuel cua app vao file.
-
-//Lam chon file JSON va code lai generate file JSON: xac dinh ro la can nhung cai j trong file.
 
 //scroll toi element trong local mapping khi dua chuot vao o danh dau trong dgmSrc
 
 //xem co the su dung dc ban phim cung luc voi chuot ko de co nhieu cach the hien outil.
 //  vi du giu shift va chon cells canh nhau lien tiep trong dgmSrc de scroll den element trong lm.
 
+//doc virtuel react de render diagram.
+//doc router react de lay dc nhieu app.
 
+//Lam chon file JSON.
+//parse fichier json de lay ra nhung object dans su dung.
+//Luu state actuel cua app vao file: (code generate file JSON) luu tat ca giong voi file exemple_data.json
 
-const localMapping = initialLocalMapping;
-const superRule = initialSuperRule;
+//van co van de o undo/redo
+
+const localMapping = initLocalMapping;
+const superRule = initSuperRule;
+
 var actionList = [];
 var indActionList = -1;
 
 function App (props) {
   const [sourceDiagram, setSourceDiagram] = useState([]);
-  const [localMappingList, setLocalMappingList] = useState(initialLocalMapping.getTable());
+  const [localMappingList, setLocalMappingList] = useState(initLocalMapping.getTable());
   const [targetDiagram, setTargetDiagram] = useState([]);
   const [locationOnMouseEnter, setLocationOnMouseEnter] = useState( { time : -1, position : -1 } );
   
@@ -51,7 +53,7 @@ function App (props) {
     actionList.push( { lConfig : lmElement[0], 
                      oldState : localMapping.get(lmElement[0]).state,
                      newState : nextState } );
-    indActionList = actionList.length - 1;
+    indActionList = actionList.length;
 
     localMapping.get(lmElement[0]).state = nextState;
     setLocalMappingList(localMapping.getTable());
@@ -62,19 +64,20 @@ function App (props) {
   }
 
   const handleChangeSize = (newSize) => {
-    const newSourceDiagram = simulate(initialRule, getInitialGConfig(newSize), 
+    const newSourceDiagram = simulate(initRule, getInitGConfig(newSize), 
                                       outSpaceState, nCellLeft, nCellRight);
     const newTargetDiagram = buildTargetDiagramFromLocalMapping(localMapping, 
                                       newSourceDiagram, outSpaceState, nCellLeft, nCellRight);
     setSourceDiagram(newSourceDiagram);
     setTargetDiagram(newTargetDiagram);
-    setLocationOnMouseEnter( { time : -1, position : -1 } );
+    setLocationOnMouseEnter( { time : -1, position : -1 } );//TODO
 
 /*console.log(newSourceDiagram[1][0]);
 console.log(newTargetDiagram);*/
   }
 
-  const inUndoRedoAction = (lConfig, state) => {
+  //inNavigate
+  function inUndoRedoAction(lConfig, state) {
     localMapping.get(lConfig).state = state;
       setLocalMappingList(localMapping.getTable());
       const newTargetDiagram = buildTargetDiagramFromLocalMapping(localMapping, 
@@ -82,10 +85,20 @@ console.log(newTargetDiagram);*/
       setTargetDiagram(newTargetDiagram);
   }
 
+  //retard quand click ici quand changer dans lm
   const handleUndoClick = () => {
-    if (indActionList >= 0) {
-      console.log(actionList);
-      console.log(indActionList);
+    if (indActionList > -1) {
+      indActionList--;
+      if (indActionList !== -1) {
+        const action = actionList[indActionList];
+        inUndoRedoAction(action.lConfig, action.oldState);
+        setLocationOnMouseEnter( { time : -1, position : -1 } );
+      }
+    }
+
+    /*if (indActionList >= 0) {
+      //console.log(actionList);
+      //console.log(indActionList);
       const action = actionList[indActionList];
       inUndoRedoAction(action.lConfig, action.oldState);
       setLocationOnMouseEnter( { time : -1, position : -1 } );
@@ -93,22 +106,90 @@ console.log(newTargetDiagram);*/
 
     if (indActionList > 0) {
       indActionList--;
-    }
+    }*/
   }
 
+  //retard quand click ici quand changer dans lm
   const handleRedoClick = () => {
     if (indActionList < actionList.length) {
-      console.log(actionList);
-      console.log(indActionList);
-      const action = actionList[indActionList];
-      inUndoRedoAction(action.lConfig, action.newState);
-      setLocationOnMouseEnter( { time : -1, position : -1 } );
-    }
-
-    if (indActionList < actionList.length - 1)
       indActionList++;
+      if (indActionList !== actionList.length) {
+        const action = actionList[indActionList];
+        inUndoRedoAction(action.lConfig, action.newState);
+        setLocationOnMouseEnter( { time : -1, position : -1 } );
+      }
+    }
+    /*if (actionList.length > 0) {
+      if (indActionList < actionList.length) {
+        //console.log(actionList);
+        //console.log(indActionList);
+        const action = actionList[indActionList];
+        inUndoRedoAction(action.lConfig, action.newState);
+        setLocationOnMouseEnter( { time : -1, position : -1 } );
+      }
+
+      if (indActionList < actionList.length - 1)
+        indActionList++;
+    }*/
   }
 
+  function buildTargetRelationLevelHelper(superLConfig, superResult, levelLocalMapping, cutSizeLevel, cutNumber) {
+    const targetLConfig = [];
+    for (var i = 0; i < cutNumber; i++) {
+      const motif = superLConfig.slice(i, i + cutSizeLevel);
+      const motifResult = localMapping.get(motif);
+
+      if (motifResult === undefined) {
+        console.log("level lm: ", levelLocalMapping, ", cut size: ", cutSizeLevel, ", slc: ", superLConfig , ", motif: ",  motif);
+      }
+
+      const state = motifResult.state;
+      targetLConfig.push(state);
+    }
+    
+    const targetResult = localMapping.get(superResult).state;
+    return [targetLConfig, targetResult];
+  }
+
+  function buildTargetRelationList() {
+    const targetRelation = [];
+    const cutNumber = nCellLeft + 1 + nCellRight; 
+    for (var levelSuperRule = 1; levelSuperRule <= dt; levelSuperRule++) {
+      const levelLocalMapping = levelSuperRule - 1;
+      const cutSizeLevel = levelLocalMapping * (nCellLeft + nCellRight) + 1;
+      const targetRelationLevel = superRule[levelSuperRule].map( superLConfig => 
+        buildTargetRelationLevelHelper(superLConfig, superLConfig, levelLocalMapping, cutSizeLevel, cutNumber)
+      );
+
+      targetRelation.push(targetRelationLevel);
+    }
+
+    const cutSizeLevelMax = dt * (nCellLeft + nCellRight) + 1;
+    const targetRelationLevelMax = superRule[dt + 1].map( ([superLConfig, superResult]) => 
+      buildTargetRelationLevelHelper(superLConfig, superResult, dt, cutSizeLevelMax, cutNumber)
+    );
+
+    targetRelation.push(targetRelationLevelMax);
+
+    return targetRelation;
+  }
+
+//TODO chuyen xuong TargetContainer de afficher rule
+  const handleCheckLocalMapping = () => {
+    const targetRule = new TransitionTable();
+    const targetRelationList = buildTargetRelationList();
+    targetRelationList.forEach( level => {
+      level.forEach( ([lConfig, result]) => {
+        var oldResult = targetRule.get(lConfig);
+        if (oldResult === undefined)
+          targetRule.set(lConfig, { state:result, mutable:false });
+        else if (oldResult.state !== result)
+          console.log("Error: ", lConfig, " has ", oldResult.state, " and ", result);
+      } );
+    } );
+
+    console.log("okkk");
+  }
 
   return (
     <Container fluid style={ {'height': "100vh", backgroundColor:"green"} }>
@@ -117,6 +198,7 @@ console.log(newTargetDiagram);*/
           handleChangeSize = { handleChangeSize }
           handleUndoClick = { handleUndoClick }
           handleRedoClick = { handleRedoClick }
+          handleCheckLocalMapping = { handleCheckLocalMapping }
         />
       </Row>
       <Row>
@@ -126,6 +208,7 @@ console.log(newTargetDiagram);*/
         >
           <SourceContainer
             sourceDiagram = { sourceDiagram }
+            superRule = { superRule }
             locationOnMouseEnter = { locationOnMouseEnter }
           />
         </Col>

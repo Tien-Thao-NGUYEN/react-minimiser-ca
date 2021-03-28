@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { getColor } from './renderHelper'
+import { fillColor } from '../data/parseData'
 
 //jouter text pour afficher état
 const Cell = React.memo((props) => {
@@ -18,14 +18,14 @@ const Cell = React.memo((props) => {
 				y = { 0 }
 				width = { props.cellSize }
 				height={ props.cellSize }
-        fill = { getColor(props.cellState) } 
+        fill = { fillColor(props.cellState) } 
 				fillOpacity = { props.fillOpacity }
 				stroke = { props.stroke } 
 				strokeWidth={ props.strokeWidth }
 			/>
 
       <text 
-        x = { props.cellSize / 4 } 
+        x = { props.cellSize / 5 } 
         y = { props.cellSize - (props.cellSize / 5)}
         fontFamily = { "Verdana" }
         fontWeight = { "bolder" }

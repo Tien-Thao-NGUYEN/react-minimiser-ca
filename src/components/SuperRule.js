@@ -4,85 +4,120 @@ import { Container, Row, Col, ButtonGroup, Button } from 'react-bootstrap';
 import Tuple from './Tuple';
 
 import { defaultCellSize, zoomStep, emptyFunction, styleContainer } from './renderHelper'; 
-import { initialSuperRule } from '../data/dataHelper';
 
 
-const SuperRule = React.memo(function SuperRule(props) {
-	const [scale, setScale] = useState(1);
+const SuperRule = React.memo(
+  function SuperRule({ superRule }) {
+  	const [scale, setScale] = useState(1);
+  
+  	const handleZoomInClick = () => setScale(scale + zoomStep);
+  	const handleZoomOutClick = () => setScale(scale - zoomStep);
+  
+    var cellSize = defaultCellSize * scale;
 
-	const handleZoomInClick = () => setScale(scale + zoomStep);
-	const handleZoomOutClick = () => setScale(scale - zoomStep);
+    function renderSuperRuleLevel() {
+      const levelArray = Object.keys(superRule);
+      levelArray.pop();
+      const tupleArrayArray = levelArray.map( level => {
+        return superRule[level].map( (superLConfig, indSuperLConfig) => {
+          const indexLine = indSuperLConfig * 2;
+          const x = 0;
+          const stroke = 'black';
+          const strokeWidth = 1;
 
-  var cellSize = defaultCellSize * scale;
-	return (
-		<Container>
-			<Row>
-				<ButtonGroup size = "sm">
-					<Button onClick = { handleZoomInClick }> z+ </Button>
-					<Button onClick = { handleZoomOutClick }> z- </Button>
-				</ButtonGroup>
-			</Row>
-			<Row>
-				<Col style={ styleContainer } >
-					<svg 
-            width = { 100 } 
-            height = { initialSuperRule.length * cellSize * 3 } 
-            xmlns="http://www.w3.org/2000/svg"
-          >
-						{
-							initialSuperRule.map( ([quint, tripl], indSrList) => {
-                if (quint.length === tripl.length) {
-                  var indexLine = indSrList * 2;
-                  var x = 1;
-                }
-                else{
-                  indexLine = (indSrList - 1.5) * 3;
-                  x = 0;
-                }
+          /*console.log(superLConfig);*/
 
-                if (props.indexSRErrorByGroup.flat().includes(indSrList)) {
-                  var stroke = 'red';
-                  var strokeWidth = 3;
-                }
-                else {
-                  stroke = 'black';
-                  strokeWidth = 1;
-                }
+          return <Tuple
+                    key = { indexLine }
+                    x = { x }
+                    indexLine = { indexLine }
+                    tuple = { superLConfig }
+                    cellSize = { cellSize }
+                    fillOpacity = { 1 }
+                    stroke = { stroke } 
+                    strokeWidth={ strokeWidth }
+                    handleCellClick = { emptyFunction }
+                  />
+        } );
+      } );
 
-                const quintSVG =  <Tuple
-                                    key = { indexLine }
-                                    x = { x }
-                                    indexLine = { indexLine }
-                                    tuple = { quint }
-                                    cellSize = { cellSize }
-                                    fillOpacity = { 1 }
-                                    stroke = { stroke } 
-                                    strokeWidth={ strokeWidth }
-                                    handleCellClick = { emptyFunction }
-                                  />
+      /*console.log(tupleArrayArray);*/
 
-                return quint.length === tripl.length ?
-                  [ quintSVG ] :
-                  [ quintSVG,
-                    <Tuple
-                      key = { indexLine + 1 }
-                      x = { 1 }
-                      indexLine = { indexLine + 1 }
-                      tuple = { tripl }
-                      cellSize = { cellSize }
-                      fillOpacity = { 1 }
-                      stroke = { stroke } 
-                      strokeWidth={ strokeWidth }
-                      handleCellClick = { emptyFunction }
-                    /> ]
-                }
-              )
-						}
-					</svg>
-				</Col>
-			</Row>
-		</Container>
-	);
-});
+      return tupleArrayArray.flat();
+    }
+
+    function renderSuperRuleLevelMax() {
+      const levelArray = Object.keys(superRule);
+      const levelMax = levelArray.pop();
+      const indexed = levelArray.map( key => superRule[key].length).reduce((a, b) => a + b, 0) - 1.5;
+
+      const fillOpacity = 1;
+      const stroke = 'black';
+      const strokeWidth = 1;
+
+      const transitionRenderList = superRule[levelMax].map( ([superLConfig, superResult], indSuperTransition) => {
+          const slcIndexLine = (indexed + indSuperTransition) * 3;
+          const slcX = 0;
+          /*console.log(superLConfig);*/
+          const superLConfigRender =  <Tuple
+                                        key = { slcIndexLine }
+                                        x = { slcX }
+                                        indexLine = { slcIndexLine }
+                                        tuple = { superLConfig }
+                                        cellSize = { cellSize }
+                                        fillOpacity = { fillOpacity }
+                                        stroke = { stroke } 
+                                        strokeWidth={ strokeWidth }
+                                        handleCellClick = { emptyFunction }
+                                      />;
+
+          const srIndexLine = slcIndexLine + 1;
+          const srX = 1;
+          /*console.log(superResult);*/
+          const superResultRender =  <Tuple
+                                        key = { srIndexLine }
+                                        x = { srX }
+                                        indexLine = { srIndexLine }
+                                        tuple = { superResult }
+                                        cellSize = { cellSize }
+                                        fillOpacity = { fillOpacity }
+                                        stroke = { stroke } 
+                                        strokeWidth={ strokeWidth }
+                                        handleCellClick = { emptyFunction }
+                                      />;
+
+          return [superLConfigRender, superResultRender];
+        } );
+      return transitionRenderList.flat();
+    }
+
+    
+    var superRuleSize = Object.keys(superRule).map( key => superRule[key].length).reduce((a, b) => a + b, 0);
+
+  	return (
+  		<Container>
+  			<Row>
+  				<ButtonGroup size = "sm">
+  					<Button onClick = { handleZoomInClick }> z+ </Button>
+  					<Button onClick = { handleZoomOutClick }> z- </Button>
+  				</ButtonGroup>
+  			</Row>
+  			<Row>
+  				<Col style={ styleContainer } >
+  					<svg 
+              width = { 100 } 
+              height = { superRuleSize * cellSize * 3 } 
+              xmlns="http://www.w3.org/2000/svg"
+            >
+  						{
+  							renderSuperRuleLevel().concat(renderSuperRuleLevelMax())
+  						}
+  					</svg>
+  				</Col>
+  			</Row>
+  		</Container>
+  	);
+  }
+);
 
 export default SuperRule;
