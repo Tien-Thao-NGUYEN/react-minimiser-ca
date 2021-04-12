@@ -5,7 +5,7 @@ const oneStep = (transitionTable, currentGConfig, outSpaceState, nCellLeft, nCel
   
   const lConfigSize = nCellLeft + 1 + nCellRight;
   const nextGConfig = [];
-  for (var position = 0; position < currentGConfig.length; position++) {
+  for (let position = 0; position < currentGConfig.length; position++) {
     const nextResult = transitionTable.get(currentGConfigShallow.slice(position, position + lConfigSize));
     if (nextResult === undefined) {
       /*console.log(currentGConfigShallow.slice(position, position + lConfigSize));*/
@@ -23,8 +23,8 @@ const simulate = (transitionTable, initialGConfig, outSpaceState, nCellLeft, nCe
     return [];
 
   const diagram = [initialGConfig];
-  var isContinue = true;
-  var currentGConfig = initialGConfig;
+  let isContinue = true;
+  let currentGConfig = initialGConfig;
   do {
     const [shouldContinue, nextGConfig] = 
             oneStep(transitionTable, currentGConfig, outSpaceState, nCellLeft, nCellRight);
@@ -47,7 +47,7 @@ const nextGConfig = (localMapping, currentGConfig, outSpaceState, nCellLeft, nCe
   
   const lConfigSize = nCellLeft + 1 + nCellRight;
   const nextGConfig = [];
-  for (var position = 0; position < currentGConfig.length; position++) {
+  for (let position = 0; position < currentGConfig.length; position++) {
     const lConfig = currentGConfigShallow.slice(position, position + lConfigSize);
     const nextResult = localMapping.get(lConfig);
     nextGConfig.push(nextResult.state);
@@ -61,7 +61,7 @@ const buildTargetDiagramFromLocalMapping = (localMapping, sourceDiagram, outSpac
     return [];
   
   const targetDiagrame = [[...sourceDiagram[0]]];
-  for (var time = 0; time <= sourceDiagram.length - 2; time++) {
+  for (let time = 0; time <= sourceDiagram.length - 2; time++) {
     const targetGConfig = nextGConfig(localMapping, sourceDiagram[time], outSpaceState, nCellLeft, nCellRight);
     targetDiagrame.push(targetGConfig);
   }

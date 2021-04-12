@@ -13,13 +13,13 @@ const Diagram = React.memo(
   	const handleZoomInClick = () => setScale(scale + zoomStep);
   	const handleZoomOutClick = () => setScale(scale - zoomStep);
 
-    var cellSize = defaultCellSize * scale;
+    const cellSize = defaultCellSize * scale;
 
     const cellCollection = () => {
       const cellCollection = [];
-      for (var time = 0; time < infoDiagram.length; time++) {
+      for (let time = 0; time < infoDiagram.length; time++) {
         const infoGConfig = infoDiagram[time];
-        for (var position = 0; position < infoGConfig.length; position++) {
+        for (let position = 0; position < infoGConfig.length; position++) {
           const infoCell = infoGConfig[position];
           const cell =  <Cell
                           key = { time * infoGConfig.length + position }

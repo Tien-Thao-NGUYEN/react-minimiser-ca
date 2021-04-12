@@ -22,7 +22,7 @@ export default class TransitionTable extends Map {
   }
 
   isDeterminismIfSet(localConfig, value) {
-    var old_value = this.get(localConfig);
+    const old_value = this.get(localConfig);
     if (old_value === undefined)
       return true;
     else

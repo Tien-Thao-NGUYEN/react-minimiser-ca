@@ -13,7 +13,7 @@ const GeneratedRule = React.memo(
   	const handleZoomInClick = () => setScale(scale + zoomStep);
   	const handleZoomOutClick = () => setScale(scale - zoomStep);
 
-  	var cellSize = defaultCellSize * scale;
+  	const cellSize = defaultCellSize * scale;
 
   	return (
     		<Container>

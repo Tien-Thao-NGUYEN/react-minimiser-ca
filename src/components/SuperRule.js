@@ -13,7 +13,7 @@ const SuperRule = React.memo(
   	const handleZoomInClick = () => setScale(scale + zoomStep);
   	const handleZoomOutClick = () => setScale(scale - zoomStep);
   
-    var cellSize = defaultCellSize * scale;
+    const cellSize = defaultCellSize * scale;
 
     function renderSuperRuleLevel() {
       const levelArray = Object.keys(superRule);
@@ -92,7 +92,8 @@ const SuperRule = React.memo(
     }
 
     
-    var superRuleSize = Object.keys(superRule).map( key => superRule[key].length).reduce((a, b) => a + b, 0);
+    const superRuleSize = Object.keys(superRule).map( key => 
+                                superRule[key].length).reduce((a, b) => a + b, 0) - 1;
 
   	return (
   		<Container>

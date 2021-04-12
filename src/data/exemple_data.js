@@ -1,3 +1,4 @@
+//peut être ajouter une fonction qui dit quand arrêter la simulation.
 const data = 
 {
   "activeState": "1",

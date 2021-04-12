@@ -17,11 +17,11 @@ const Cell = React.memo((props) => {
 				x = { 0 } 
 				y = { 0 }
 				width = { props.cellSize }
-				height={ props.cellSize }
+				height = { props.cellSize }
         fill = { fillColor(props.cellState) } 
 				fillOpacity = { props.fillOpacity }
 				stroke = { props.stroke } 
-				strokeWidth={ props.strokeWidth }
+				strokeWidth = { props.strokeWidth }
 			/>
 
       <text 

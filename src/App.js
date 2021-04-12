@@ -13,25 +13,26 @@ import { initRule, initSuperRule, initLocalMapping, getNextState, outSpaceState,
 
 //NOTE: 
 
-//scroll toi element trong local mapping khi dua chuot vao o danh dau trong dgmSrc
+//scroll à l'élement et le mettre en gras dans local mapping 
+//  quand utilisateur choisi une configuration locale dans dgmSrc
+//  (il faut utiliser les touches).
 
-//xem co the su dung dc ban phim cung luc voi chuot ko de co nhieu cach the hien outil.
-//  vi du giu shift va chon cells canh nhau lien tiep trong dgmSrc de scroll den element trong lm.
+//utiliser react-virtuel pour render diagram.
+//react_router pour récupérer les composants(peut être utiliser pour ouvrir les différence page).
 
-//doc virtuel react de render diagram.
-//doc router react de lay dc nhieu app.
+//Coder lire input file JSON et parse un fichier JSON.
 
-//Lam chon file JSON.
-//parse fichier json de lay ra nhung object dans su dung.
-//Luu state actuel cua app vao file: (code generate file JSON) luu tat ca giong voi file exemple_data.json
+//Sauvegarder l'état actuel d'application.
 
-//van co van de o undo/redo
+//Mettre en gras l'élément dans local mapping quand l'utilisateur vient de cliquer.
+
+//show targetRule quand déterministe.
 
 const localMapping = initLocalMapping;
 const superRule = initSuperRule;
 
-var actionList = [];
-var indActionList = -1;
+let actionList = [];
+let indActionList = -1;
 
 function App (props) {
   const [sourceDiagram, setSourceDiagram] = useState([]);
@@ -47,13 +48,19 @@ function App (props) {
     const lmElement = localMappingList[indexLine];
     const nextState = getNextState(lmElement[1].state);
     
-    if (indActionList < actionList.length - 1)
-      actionList = actionList.slice(0, indActionList + 1);
+    //bug ici, au niveau slice
+    //if (indActionList < actionList.length - 1)
+      actionList = actionList.slice(0, indActionList);
 
     actionList.push( { lConfig : lmElement[0], 
                      oldState : localMapping.get(lmElement[0]).state,
                      newState : nextState } );
     indActionList = actionList.length;
+
+    /*
+    console.log(actionList);
+    console.log(indActionList);
+    */
 
     localMapping.get(lmElement[0]).state = nextState;
     setLocalMappingList(localMapping.getTable());
@@ -79,63 +86,40 @@ console.log(newTargetDiagram);*/
   //inNavigate
   function inUndoRedoAction(lConfig, state) {
     localMapping.get(lConfig).state = state;
-      setLocalMappingList(localMapping.getTable());
-      const newTargetDiagram = buildTargetDiagramFromLocalMapping(localMapping, 
+    setLocalMappingList(localMapping.getTable());
+    const newTargetDiagram = buildTargetDiagramFromLocalMapping(localMapping, 
                                       sourceDiagram, outSpaceState, nCellLeft, nCellRight);
-      setTargetDiagram(newTargetDiagram);
+    setTargetDiagram(newTargetDiagram);
   }
 
-  //retard quand click ici quand changer dans lm
   const handleUndoClick = () => {
-    if (indActionList > -1) {
+    if (indActionList > 0) {
       indActionList--;
-      if (indActionList !== -1) {
-        const action = actionList[indActionList];
-        inUndoRedoAction(action.lConfig, action.oldState);
-        setLocationOnMouseEnter( { time : -1, position : -1 } );
-      }
-    }
-
-    /*if (indActionList >= 0) {
-      //console.log(actionList);
-      //console.log(indActionList);
       const action = actionList[indActionList];
       inUndoRedoAction(action.lConfig, action.oldState);
       setLocationOnMouseEnter( { time : -1, position : -1 } );
     }
 
-    if (indActionList > 0) {
-      indActionList--;
-    }*/
+    /*console.log(actionList);
+    console.log(indActionList);*/
   }
 
-  //retard quand click ici quand changer dans lm
   const handleRedoClick = () => {
-    if (indActionList < actionList.length) {
+    if (actionList.length > 0 && indActionList < actionList.length) {
+      const action = actionList[indActionList];
+      inUndoRedoAction(action.lConfig, action.newState);
+      setLocationOnMouseEnter( { time : -1, position : -1 } );
+      
       indActionList++;
-      if (indActionList !== actionList.length) {
-        const action = actionList[indActionList];
-        inUndoRedoAction(action.lConfig, action.newState);
-        setLocationOnMouseEnter( { time : -1, position : -1 } );
-      }
     }
-    /*if (actionList.length > 0) {
-      if (indActionList < actionList.length) {
-        //console.log(actionList);
-        //console.log(indActionList);
-        const action = actionList[indActionList];
-        inUndoRedoAction(action.lConfig, action.newState);
-        setLocationOnMouseEnter( { time : -1, position : -1 } );
-      }
 
-      if (indActionList < actionList.length - 1)
-        indActionList++;
-    }*/
+    /*console.log(actionList);
+    console.log(indActionList);*/
   }
 
   function buildTargetRelationLevelHelper(superLConfig, superResult, levelLocalMapping, cutSizeLevel, cutNumber) {
     const targetLConfig = [];
-    for (var i = 0; i < cutNumber; i++) {
+    for (let i = 0; i < cutNumber; i++) {
       const motif = superLConfig.slice(i, i + cutSizeLevel);
       const motifResult = localMapping.get(motif);
 
@@ -154,7 +138,7 @@ console.log(newTargetDiagram);*/
   function buildTargetRelationList() {
     const targetRelation = [];
     const cutNumber = nCellLeft + 1 + nCellRight; 
-    for (var levelSuperRule = 1; levelSuperRule <= dt; levelSuperRule++) {
+    for (let levelSuperRule = 1; levelSuperRule <= dt; levelSuperRule++) {
       const levelLocalMapping = levelSuperRule - 1;
       const cutSizeLevel = levelLocalMapping * (nCellLeft + nCellRight) + 1;
       const targetRelationLevel = superRule[levelSuperRule].map( superLConfig => 
@@ -174,21 +158,25 @@ console.log(newTargetDiagram);*/
     return targetRelation;
   }
 
-//TODO chuyen xuong TargetContainer de afficher rule
+//TODO passe cette function à TargetContainer pour afficher rule
   const handleCheckLocalMapping = () => {
     const targetRule = new TransitionTable();
     const targetRelationList = buildTargetRelationList();
+    let isDet = true;
     targetRelationList.forEach( level => {
       level.forEach( ([lConfig, result]) => {
-        var oldResult = targetRule.get(lConfig);
+        const oldResult = targetRule.get(lConfig);
         if (oldResult === undefined)
           targetRule.set(lConfig, { state:result, mutable:false });
-        else if (oldResult.state !== result)
+        else if (oldResult.state !== result) {
           console.log("Error: ", lConfig, " has ", oldResult.state, " and ", result);
+          isDet = false;
+        }
       } );
     } );
 
-    console.log("okkk");
+    if (isDet)
+      console.log("okkkkkkkkk");
   }
 
   return (

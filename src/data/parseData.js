@@ -9,7 +9,7 @@ function parseData(jsonString) {
 
 function parseRule(ruleStringArray, separatorTransition, separatorState) {
   /*console.log(ruleStringArray);*/
-  var rule = new TransitionTable();
+  let rule = new TransitionTable();
   ruleStringArray.forEach( e => {
     const transition = e.split(separatorTransition);
     const lConfig = transition[0].split(separatorState);
@@ -24,7 +24,7 @@ function parseLocalMapping(localMappingFixeStringArray, localMappingChangeString
                                 separatorTransition, separatorState, dt) {
   const localMapping = new TransitionTable();
 
-  for (var h = 0; h <= dt; h++) {
+  for (let h = 0; h <= dt; h++) {
     const hArrayChange = localMappingChangeStringArray[h];
     hArrayChange.forEach( e => {
       const transition = e.split(separatorTransition);
@@ -48,7 +48,7 @@ function parseLocalMapping(localMappingFixeStringArray, localMappingChangeString
 function parseSuperRule(superRuleStringArray, separatorTransition, separatorState, dt) {
   /*console.log(superRuleStringArray);*/
   const superRule = {};
-  for (var h = 1; h <= dt; h++) {
+  for (let h = 1; h <= dt; h++) {
     const hArray = superRuleStringArray[h];
     /*console.log(hArray);*/
     superRule[h] = hArray.map( e => e.split(separatorState) );
@@ -70,7 +70,7 @@ function getInitGConfig(size) {
     return [];
 
   const gc0 = [data.activeState];
-  for (var i = 1; i < size; i++)
+  for (let i = 1; i < size; i++)
     gc0.push(data.quiescenceState);
 
   return gc0;

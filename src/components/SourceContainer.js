@@ -10,17 +10,17 @@ import { emptyFunction } from './renderHelper';
 const SourceContainer = React.memo(
   function SourceContainer( {sourceDiagram, superRule, locationOnMouseEnter} ) {
     const [showDiagram, setShowDiagram] = useState(true);
-    const handlerShowDiagram = () => {var show = !showDiagram; setShowDiagram(show)}; 
+    const handlerShowDiagram = () => {let show = !showDiagram; setShowDiagram(show)}; 
 
     const [showSuperRule, setShowSuperRule] = useState(false);
-    const handlerShowSuperRule = () => {var show = !showSuperRule; setShowSuperRule(show)}; 
+    const handlerShowSuperRule = () => {let show = !showSuperRule; setShowSuperRule(show)}; 
   
     function infoDiagram() {
       const infoDiagram = [];
-      for (var time = 0; time < sourceDiagram.length; time++) {
+      for (let time = 0; time < sourceDiagram.length; time++) {
         const sourceGConfig = sourceDiagram[time];
         const infoGConfig = [];
-        for (var position = 0; position < sourceGConfig.length; position++) {
+        for (let position = 0; position < sourceGConfig.length; position++) {
           if (time === locationOnMouseEnter.time - 1 
             && (position === locationOnMouseEnter.position - 1
               || position === locationOnMouseEnter.position
@@ -33,8 +33,8 @@ const SourceContainer = React.memo(
             strokeWidth = 1;
           }
           
-          var fillOpacity = 1;
-          var stateColor = 'black';
+          let fillOpacity = 1;
+          let stateColor = 'black';
  
           const infoCell = {  state : sourceGConfig[position],
                               stateColor : stateColor,
