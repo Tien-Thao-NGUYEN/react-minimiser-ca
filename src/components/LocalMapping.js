@@ -40,7 +40,10 @@ const LocalMapping = React.memo(
                     }
                     else {
                       stroke = 'black';
-                      strokeWidth = 1;
+                      if (indElem === props.indexChangeLocalMapping)
+                        strokeWidth = 3;
+                      else
+                        strokeWidth = 1;
                       handleCellClick = () => props.handleLocalMappingCellClick(indElem);
                       stateColor = 'black';
                     }

@@ -37,6 +37,7 @@ let indActionList = -1;
 function App (props) {
   const [sourceDiagram, setSourceDiagram] = useState([]);
   const [localMappingList, setLocalMappingList] = useState(initLocalMapping.getTable());
+  const [indexChangeLocalMapping, setIndexChangeLocalMapping] = useState(-1); 
   const [targetDiagram, setTargetDiagram] = useState([]);
   const [locationOnMouseEnter, setLocationOnMouseEnter] = useState( { time : -1, position : -1 } );
   
@@ -45,16 +46,24 @@ function App (props) {
   }
   
   const handleLocalMappingCellClick = (indexLine) => {
-    const lmElement = localMappingList[indexLine];
-    const nextState = getNextState(lmElement[1].state);
-    
-    //bug ici, au niveau slice
-    //if (indActionList < actionList.length - 1)
-      actionList = actionList.slice(0, indActionList);
+    const newReferenceLocalMappingList = [...localMappingList];
+    const lmElement = newReferenceLocalMappingList[indexLine];
+    const oldState = lmElement[1].state;
+    const newState = getNextState(oldState);
+    lmElement[1].state = newState;
+    setLocalMappingList(newReferenceLocalMappingList);
+    setIndexChangeLocalMapping(indexLine);
 
-    actionList.push( { lConfig : lmElement[0], 
-                     oldState : localMapping.get(lmElement[0]).state,
-                     newState : nextState } );
+    const newTargetDiagrame = buildTargetDiagramFromLocalMapping(localMapping, sourceDiagram,
+      outSpaceState, nCellRight, nCellRight);
+    setTargetDiagram(newTargetDiagrame);
+
+    localMapping.get(lmElement[0]).state = newState;
+
+    actionList = actionList.slice(0, indActionList);
+    actionList.push( { indexLine : indexLine, 
+                     oldState : oldState,
+                     newState : newState } );
     indActionList = actionList.length;
 
     /*
@@ -62,12 +71,52 @@ function App (props) {
     console.log(indActionList);
     */
 
-    localMapping.get(lmElement[0]).state = nextState;
-    setLocalMappingList(localMapping.getTable());
+    
+  }
 
-    const newTargetDiagrame = buildTargetDiagramFromLocalMapping(localMapping, sourceDiagram,
-      outSpaceState, nCellRight, nCellRight);
-    setTargetDiagram(newTargetDiagrame);
+  //inNavigate
+  function inUndoRedoAction(indexLine, state) {
+    const newReferenceLocalMappingList = [...localMappingList];
+    const lmElement = newReferenceLocalMappingList[indexLine];
+    lmElement[1].state = state;
+    setLocalMappingList(newReferenceLocalMappingList);
+
+    const newTargetDiagram = buildTargetDiagramFromLocalMapping(localMapping, 
+                                      sourceDiagram, outSpaceState, nCellLeft, nCellRight);
+    setTargetDiagram(newTargetDiagram);
+
+    localMapping.get(lmElement[0]).state = state;
+  }
+
+  const handleUndoClick = () => {
+    if (indActionList > 0) {
+      indActionList--;
+      const action = actionList[indActionList];
+      inUndoRedoAction(action.indexLine, action.oldState);
+      if (indActionList === 0)
+        setIndexChangeLocalMapping(-1);
+      else
+        setIndexChangeLocalMapping(actionList[indActionList - 1].indexLine);
+
+      setLocationOnMouseEnter( { time : -1, position : -1 } );
+    }
+
+    /*console.log(actionList);
+    console.log(indActionList);*/
+  }
+
+  const handleRedoClick = () => {
+    if (actionList.length > 0 && indActionList < actionList.length) {
+      const action = actionList[indActionList];
+      inUndoRedoAction(action.indexLine, action.newState);  
+      setIndexChangeLocalMapping(actionList[indActionList].indexLine);
+      setLocationOnMouseEnter( { time : -1, position : -1 } );
+      
+      indActionList++;
+    }
+
+    /*console.log(actionList);
+    console.log(indActionList);*/
   }
 
   const handleChangeSize = (newSize) => {
@@ -81,40 +130,6 @@ function App (props) {
 
 /*console.log(newSourceDiagram[1][0]);
 console.log(newTargetDiagram);*/
-  }
-
-  //inNavigate
-  function inUndoRedoAction(lConfig, state) {
-    localMapping.get(lConfig).state = state;
-    setLocalMappingList(localMapping.getTable());
-    const newTargetDiagram = buildTargetDiagramFromLocalMapping(localMapping, 
-                                      sourceDiagram, outSpaceState, nCellLeft, nCellRight);
-    setTargetDiagram(newTargetDiagram);
-  }
-
-  const handleUndoClick = () => {
-    if (indActionList > 0) {
-      indActionList--;
-      const action = actionList[indActionList];
-      inUndoRedoAction(action.lConfig, action.oldState);
-      setLocationOnMouseEnter( { time : -1, position : -1 } );
-    }
-
-    /*console.log(actionList);
-    console.log(indActionList);*/
-  }
-
-  const handleRedoClick = () => {
-    if (actionList.length > 0 && indActionList < actionList.length) {
-      const action = actionList[indActionList];
-      inUndoRedoAction(action.lConfig, action.newState);
-      setLocationOnMouseEnter( { time : -1, position : -1 } );
-      
-      indActionList++;
-    }
-
-    /*console.log(actionList);
-    console.log(indActionList);*/
   }
 
   function buildTargetRelationLevelHelper(superLConfig, superResult, levelLocalMapping, cutSizeLevel, cutNumber) {
@@ -206,6 +221,7 @@ console.log(newTargetDiagram);*/
         >
           <LocalMapping
             localMapping = { localMappingList }
+            indexChangeLocalMapping = { indexChangeLocalMapping }
             handleLocalMappingCellClick = { handleLocalMappingCellClick }
           />
         </Col>
