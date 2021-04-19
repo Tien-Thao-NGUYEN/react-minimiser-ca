@@ -10,7 +10,7 @@ import { outSpaceState, nCellLeft, nCellRight } from '../data/parseData';
 
 
 const TargetContainer = React.memo(
-  function TargetContainer({ sourceDiagram, targetDiagram, handleTargetErrorCellClick }) {
+  function TargetContainer({ sourceDiagram, targetDiagram, targetRelationList, handleTargetErrorCellClick }) {
     const [showDiagram, setShowDiagram] = useState(true);
     const [showTargetRule, setShowTargetRule] = useState(false);
     const handlerShowTargetRule = () => {let show = !showTargetRule; setShowTargetRule(show)};
@@ -118,7 +118,7 @@ const TargetContainer = React.memo(
                 xl = { nbrColumn } 
               >
                 <GeneratedRule
-                  targetRule = { new TransitionTable() }
+                  targetRelationList = { targetRelationList }
                 />
               </Col>
     }

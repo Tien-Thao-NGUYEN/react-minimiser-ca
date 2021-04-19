@@ -24,8 +24,6 @@ import { initRule, initSuperRule, initLocalMapping, getNextState, outSpaceState,
 
 //Sauvegarder l'état actuel d'application.
 
-//Mettre en gras l'élément dans local mapping quand l'utilisateur vient de cliquer.
-
 //show targetRule quand déterministe.
 
 const localMapping = initLocalMapping;
@@ -39,6 +37,7 @@ function App (props) {
   const [localMappingList, setLocalMappingList] = useState(initLocalMapping.getTable());
   const [indexChangeLocalMapping, setIndexChangeLocalMapping] = useState(-1); 
   const [targetDiagram, setTargetDiagram] = useState([]);
+  const [targetRelationList, setTargetRealationList] = useState([]);
   const [locationOnMouseEnter, setLocationOnMouseEnter] = useState( { time : -1, position : -1 } );
   
   const handleTargetErrorCellClick = (time, position) => {
@@ -176,9 +175,10 @@ console.log(newTargetDiagram);*/
 //TODO passe cette function à TargetContainer pour afficher rule
   const handleCheckLocalMapping = () => {
     const targetRule = new TransitionTable();
-    const targetRelationList = buildTargetRelationList();
+    const newTargetRelationList = buildTargetRelationList();
+    setTargetRealationList(newTargetRelationList);
     let isDet = true;
-    targetRelationList.forEach( level => {
+    newTargetRelationList.forEach( level => {
       level.forEach( ([lConfig, result]) => {
         const oldResult = targetRule.get(lConfig);
         if (oldResult === undefined)
@@ -232,6 +232,7 @@ console.log(newTargetDiagram);*/
           <TargetContainer
             sourceDiagram = { sourceDiagram }
             targetDiagram = { targetDiagram }
+            targetRelationList = { targetRelationList }
             handleTargetErrorCellClick = { handleTargetErrorCellClick }
           />
         </Col>
