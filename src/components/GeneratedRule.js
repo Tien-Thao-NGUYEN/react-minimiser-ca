@@ -17,15 +17,26 @@ const GeneratedRule = React.memo(
     const targetRelationListLength = Object.keys(props.targetRelationList).map( key => 
                                 props.targetRelationList[key].length).reduce((a, b) => a + b, 0);
 
+     function removeDuplicated(targetArray){
+      let sortedArray= []
+      for(let i=0; i<targetArray.length-1; i++){
+        if(targetArray[i].join() !== targetArray[i+1].join()){
+          sortedArray.push(targetArray[i])
+          if(i+1===targetArray.length-1){
+            sortedArray.push(targetArray[i+1])
+          }
+        }
+      }
+     return sortedArray;
+    }
+
     function renderLocalTransition() {
-      const levelArray = Object.keys(props.targetRelationList);
-      let indexed = 0;
-      const tupleArrayArray = levelArray.map( level => {
-        const localTransArray = props.targetRelationList[level].map( ([localConfig, result], indLocalTransition) =>
+      const sortedTargetRelationList = removeDuplicated(props.targetRelationList.flat().sort())  
+        const localTransArray = sortedTargetRelationList.map( ([localConfig, result], indexed) =>
           <LocalTransition
-            key = { (indexed + indLocalTransition) * 3 }
+            key = { indexed * 3 }
             x = { 0 }
-            y = { (indexed + indLocalTransition) * 3 * cellSize }
+            y = { indexed  * 3 * cellSize }
             localConfig = { localConfig }
             result = { result }
             resultLineIndex = { 1 }
@@ -36,14 +47,8 @@ const GeneratedRule = React.memo(
             strokeWidth={ 1 }
             handleCellClick = { emptyFunction }
           />
-        )
-
-        indexed = indexed + props.targetRelationList[level].length;
-        return localTransArray;
-      } );
-      console.log(tupleArrayArray);
-
-      return tupleArrayArray.flat();
+        );
+     return localTransArray;
     }
   	
 
