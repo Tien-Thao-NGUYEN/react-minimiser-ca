@@ -17,22 +17,23 @@ const GeneratedRule = React.memo(
     const targetRelationListLength = Object.keys(props.targetRelationList).map( key => 
                                 props.targetRelationList[key].length).reduce((a, b) => a + b, 0);
 
-     function removeDuplicated(targetArray){
-      let sortedArray= []
-      for(let i=0; i<targetArray.length-1; i++){
-        if(targetArray[i].join() !== targetArray[i+1].join()){
-          sortedArray.push(targetArray[i])
-          if(i+1===targetArray.length-1){
-            sortedArray.push(targetArray[i+1])
-          }
+    function removeDuplicates(targetArray){
+      let tempTarget = targetArray.flat()
+      let result = []
+      let unique = new Set();
+      for(let i=0; i<tempTarget.length; i++){
+        let str = tempTarget[i].join()
+        if(!unique.has(str)){
+          unique.add(str)
+          result.push(tempTarget[i])
         }
       }
-     return sortedArray;
+     return result;
     }
 
     function renderLocalTransition() {
-      const sortedTargetRelationList = removeDuplicated(props.targetRelationList.flat().sort())  
-        const localTransArray = sortedTargetRelationList.map( ([localConfig, result], indexed) =>
+      const sortedTargetRelationList = removeDuplicates(props.targetRelationList)
+        const localTransArray = sortedTargetRelationList.sort().map( ([localConfig, result], indexed) =>
           <LocalTransition
             key = { indexed * 3 }
             x = { 0 }
@@ -48,8 +49,9 @@ const GeneratedRule = React.memo(
             handleCellClick = { emptyFunction }
           />
         );
+
      return localTransArray;
-    }
+  }
   	
 
     return (
